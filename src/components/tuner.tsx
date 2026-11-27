@@ -198,7 +198,7 @@ export function Tuner() {
 
   return (
     <AppPage app="/apps/tuner">
-      <section className="tuner-panel relative overflow-hidden rounded-[2rem] border p-5 sm:p-8">
+      <section className="relative">
         <div className="relative z-10 flex flex-wrap items-center justify-between gap-3">
           <Button
             size="icon-lg"

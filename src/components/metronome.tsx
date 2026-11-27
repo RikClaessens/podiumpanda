@@ -139,7 +139,7 @@ export function Metronome() {
   return (
     <AppPage app="/apps/metronome">
       <div className="space-y-3 sm:space-y-8">
-        <section className="tempo-card mx-auto w-full max-w-2xl rounded-3xl bg-secondary/60 px-3 py-3 sm:px-6 sm:py-6">
+        <section className="tempo-card relative mx-auto w-full max-w-2xl px-3 py-3 sm:px-6 sm:py-6">
           <div className="grid grid-cols-[2.75rem_minmax(0,1fr)_2.75rem] grid-rows-[auto_auto] items-center gap-x-2 sm:grid-cols-[3rem_minmax(0,1fr)_3rem] sm:gap-x-8">
             <label
               htmlFor="metronome-bpm"
@@ -151,13 +151,19 @@ export function Metronome() {
               type="button"
               variant="outline"
               size="icon"
-              className="col-start-1 row-start-2"
+              className="col-start-1 row-start-2 rounded-full"
               aria-label={t("Decrease tempo")}
               onClick={() => setTempo(bpm - 1)}
             >
               <Minus size={20} />
             </Button>
-            <div className="col-start-2 row-start-2 min-w-0 text-center">
+            <div className="relative col-start-2 row-start-2 min-w-0 text-center">
+              <span
+                className="metronome-pulse"
+                data-active={isPlaying}
+                style={{ animationDuration: `${60 / bpm}s` }}
+                aria-hidden="true"
+              />
               <div className="flex items-baseline justify-center gap-2">
                 <input
                   id="metronome-bpm"
@@ -184,7 +190,7 @@ export function Metronome() {
               type="button"
               variant="outline"
               size="icon"
-              className="col-start-3 row-start-2"
+              className="col-start-3 row-start-2 rounded-full"
               aria-label={t("Increase tempo")}
               onClick={() => setTempo(bpm + 1)}
             >
@@ -227,7 +233,7 @@ export function Metronome() {
           <Button
             type="button"
             size="icon-lg"
-            className="size-12 rounded-full shadow-sm sm:size-14"
+            className={`size-12 rounded-full shadow-md sm:size-14 ${isPlaying ? "bg-coral text-white hover:bg-coral/85 focus-visible:ring-coral/40" : ""}`}
             aria-label={t(isPlaying ? "Stop metronome" : "Start metronome")}
             title={t(isPlaying ? "Stop metronome" : "Start metronome")}
             aria-pressed={isPlaying}
@@ -245,7 +251,7 @@ export function Metronome() {
           <Button
             type="button"
             size="lg"
-            className="h-12 min-w-0 flex-1 px-4"
+            className="h-12 min-w-0 flex-1 rounded-full px-4"
             variant="outline"
             onClick={tapTempo}
           >
@@ -262,6 +268,7 @@ export function Metronome() {
                 type="button"
                 variant="outline"
                 size="icon"
+                className="rounded-full"
                 aria-label={t("Decrease beats per bar")}
                 disabled={beatsPerBar <= 1}
                 onClick={() => setBeatsPerBar(clampBeatsPerBar(beatsPerBar - 1))}
@@ -272,6 +279,7 @@ export function Metronome() {
                 type="button"
                 variant="outline"
                 size="icon"
+                className="rounded-full"
                 aria-label={t("Decrease beat unit")}
                 disabled={beatUnit <= BEAT_UNITS[0]}
                 onClick={() => {
@@ -282,7 +290,7 @@ export function Metronome() {
                 <Minus size={18} />
               </Button>
             </div>
-            <div className="metronome-stepper-card mx-auto flex min-h-28 w-full max-w-56 flex-col items-center justify-center rounded-2xl border bg-card px-3 py-2 text-center sm:min-h-32 sm:py-4">
+            <div className="metronome-stepper-card mx-auto flex min-h-28 w-full max-w-56 flex-col items-center justify-center rounded-2xl border bg-card/80 px-3 py-2 text-center sm:min-h-32 sm:py-4">
               <output
                 className="font-heading text-4xl font-bold leading-[0.95] text-primary sm:text-5xl"
                 aria-label={t("Time signature value {beats} over {unit}", {
@@ -303,6 +311,7 @@ export function Metronome() {
                 type="button"
                 variant="outline"
                 size="icon"
+                className="rounded-full"
                 aria-label={t("Increase beats per bar")}
                 disabled={beatsPerBar >= 16}
                 onClick={() => setBeatsPerBar(clampBeatsPerBar(beatsPerBar + 1))}
@@ -313,6 +322,7 @@ export function Metronome() {
                 type="button"
                 variant="outline"
                 size="icon"
+                className="rounded-full"
                 aria-label={t("Increase beat unit")}
                 disabled={beatUnit >= BEAT_UNITS[BEAT_UNITS.length - 1]}
                 onClick={() => {
@@ -333,13 +343,14 @@ export function Metronome() {
               type="button"
               variant="outline"
               size="icon"
+              className="rounded-full"
               aria-label={t("Decrease subdivision")}
               disabled={subdivision <= 1}
               onClick={() => setSubdivision(Math.max(1, subdivision - 1))}
             >
               <Minus size={18} />
             </Button>
-            <div className="metronome-stepper-card mx-auto flex min-h-20 w-full max-w-56 flex-col items-center justify-center rounded-2xl border bg-card px-3 py-2 text-center">
+            <div className="metronome-stepper-card mx-auto flex min-h-20 w-full max-w-56 flex-col items-center justify-center rounded-2xl border bg-card/80 px-3 py-2 text-center">
               <output
                 className="font-heading text-3xl font-bold leading-none text-primary"
                 aria-label={t("Subdivision count {count}", { count: subdivision })}
@@ -354,6 +365,7 @@ export function Metronome() {
               type="button"
               variant="outline"
               size="icon"
+              className="rounded-full"
               aria-label={t("Increase subdivision")}
               disabled={subdivision >= 7}
               onClick={() => setSubdivision(Math.min(7, subdivision + 1))}

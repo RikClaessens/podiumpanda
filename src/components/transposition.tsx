@@ -97,7 +97,7 @@ export function Transposition() {
 
   return (
     <AppPage app="/apps/transposition">
-      <section className="tuner-panel relative overflow-hidden rounded-[2rem] border p-5 sm:p-8">
+      <section className="relative">
         <div className="relative z-10 space-y-6">
           <div className="rounded-2xl border bg-card/80 p-4 sm:p-5">
             <div className="flex flex-wrap items-center justify-between gap-3">

@@ -112,9 +112,6 @@ label {
 }
 .hero-panel {
   background: var(--hero);
-  border: 1px solid var(--border);
-  border-radius: 1.75rem;
-  padding: 1.75rem;
 }
 .field {
   display: grid;
@@ -162,15 +159,6 @@ label {
   border-color: var(--color-coral);
   background: var(--color-coral);
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-coral) 18%, transparent);
-}
-.tuner-panel {
-  background:
-    radial-gradient(
-      circle at 50% 20%,
-      color-mix(in srgb, var(--color-lilac) 35%, transparent),
-      transparent 40%
-    ),
-    linear-gradient(145deg, var(--card), var(--secondary));
 }
 .tuner-note {
   font-size: clamp(6rem, 22vw, 9rem);
@@ -228,6 +216,55 @@ label {
 .panda-hero .loading-note-right {
   top: 12%;
   right: 3%;
+}
+.hero-note {
+  position: absolute;
+  z-index: 1;
+  color: var(--primary);
+  opacity: 0.22;
+}
+.hero-note-a {
+  top: 45%;
+  left: -2%;
+}
+.hero-note-b {
+  top: 62%;
+  right: 0;
+  color: var(--coral-foreground);
+}
+.hero-note-c {
+  top: 4%;
+  left: 38%;
+  color: var(--coral-foreground);
+}
+.hero-note-d {
+  bottom: 8%;
+  left: 8%;
+}
+.app-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at 50% 14%,
+      color-mix(in srgb, var(--color-lilac) 35%, transparent),
+      transparent 42%
+    ),
+    linear-gradient(180deg, color-mix(in srgb, var(--secondary) 70%, transparent), transparent 70%);
+}
+.metronome-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 9rem;
+  height: 9rem;
+  margin: -4.5rem 0 0 -4.5rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 18%, transparent);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
 }
 .menu-icon {
   position: relative;
@@ -308,10 +345,10 @@ label {
   .tuner-marker {
     transition: left 120ms ease-out;
   }
-  .tuner-panel::before {
+  .app-backdrop::before {
     content: "";
     position: absolute;
-    top: 5rem;
+    top: 8rem;
     left: 50%;
     width: 15rem;
     height: 15rem;
@@ -402,6 +439,31 @@ label {
   }
   .loading-note-right {
     animation-delay: -900ms;
+  }
+  .hero-note {
+    animation: note-drift 5s ease-in-out infinite;
+  }
+  .hero-note-b {
+    animation-delay: -1.5s;
+  }
+  .hero-note-c {
+    animation-delay: -3s;
+  }
+  .hero-note-d {
+    animation-delay: -4s;
+  }
+  .metronome-pulse[data-active="true"] {
+    animation: metronome-pulse 1s ease-out infinite;
+  }
+}
+@keyframes metronome-pulse {
+  from {
+    opacity: 0.9;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.5);
   }
 }
 
@@ -587,5 +649,14 @@ label {
   }
   50% {
     transform: translateY(3px);
+  }
+}
+@keyframes note-drift {
+  0%,
+  100% {
+    transform: translateY(2px) rotate(-6deg);
+  }
+  50% {
+    transform: translateY(-5px) rotate(6deg);
   }
 }

@@ -240,8 +240,9 @@ export const dutch = {
   "A little harmony before the concert": "Een beetje harmonie vóór het concert",
   "Your concert.": "Jouw concert.",
   "Everyone in tune.": "Iedereen in harmonie.",
-  "Build the setlist, find everyone’s part, and make room on stage. One shared link. No accounts needed.":
-    "Maak de setlist, verdeel de partijen en richt het podium in. Eén gedeelde link. Geen accounts nodig.",
+  "Build the setlist, find everyone’s part, and make room on stage. Warm up with the metronome, tuner, tone generator and transposition tools. No accounts needed.":
+    "Maak de setlist, verdeel de partijen en richt het podium in. Warm op met de metronoom, stemapparaat, toongenerator en transpositietools. Geen accounts nodig.",
+  "Musical apps": "Muzikale apps",
   Setlists: "Setlists",
   "Players & parts": "Spelers & partijen",
   Floorplans: "Podiumplannen",

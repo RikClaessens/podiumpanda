@@ -1,7 +1,17 @@
 import { useLanguage } from "../lib/language";
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CalendarDays, LayoutDashboard, ListMusic, Music2, Users, X } from "lucide-react";
+import {
+  CalendarDays,
+  LayoutDashboard,
+  LayoutGrid,
+  ListMusic,
+  Music2,
+  Music3,
+  Music4,
+  Users,
+  X,
+} from "lucide-react";
 import { Button } from "../components/ui/button";
 import { GroupCards } from "../components/group-cards";
 import { forget, recents, recentGroups, type Recent } from "../lib/local";
@@ -28,115 +38,129 @@ function HomeContent() {
   const groups = initial.groups;
   const [error, setError] = useState(initial.error);
   return (
-    <main className="page-enter mx-auto max-w-7xl space-y-10 px-5 py-10">
-      <section className="hero-panel grid grid-cols-[minmax(0,1fr)] items-center gap-5 sm:grid-cols-[1.3fr_1fr]">
-        <div className="space-y-5">
-          <p className="eyebrow">{t("A little harmony before the concert")}</p>
-          <h1 className="max-w-xl text-4xl font-bold leading-tight tracking-tight text-primary xl:text-5xl">
-            {t("Your group.")}
-            <br />
-            {t("Everyone in tune.")}
-          </h1>
-          <p className="max-w-lg text-base leading-relaxed text-muted-foreground">
-            {t(
-              "Build the setlist, find everyone\u2019s part, and make room on stage. One shared link. No accounts needed.",
-            )}
-          </p>
-          <div className="flex flex-wrap gap-2 text-xs font-medium text-foreground">
-            <span className="flex items-center gap-2 rounded-full bg-yellow/25 px-3 py-2">
-              <ListMusic size={18} />
-              {t("Setlists")}
-            </span>
-            <span className="flex items-center gap-2 rounded-full bg-coral/20 px-3 py-2">
-              <Users size={18} />
-              {t("Players & parts")}
-            </span>
-            <span className="flex items-center gap-2 rounded-full bg-lavender/20 px-3 py-2">
-              <LayoutDashboard size={18} />
-              {t("Floorplans")}
-            </span>
+    <div className="page-enter">
+      <section className="hero-panel py-10">
+        <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)] items-center gap-5 px-5 sm:grid-cols-[1.3fr_1fr]">
+          <div className="space-y-5">
+            <p className="eyebrow">{t("A little harmony before the concert")}</p>
+            <h1 className="max-w-xl text-4xl font-bold leading-tight tracking-tight text-primary xl:text-5xl">
+              {t("Your group.")}
+              <br />
+              {t("Everyone in tune.")}
+            </h1>
+            <p className="max-w-lg text-base leading-relaxed text-muted-foreground">
+              {t(
+                "Build the setlist, find everyone\u2019s part, and make room on stage. Warm up with the metronome, tuner, tone generator and transposition tools. No accounts needed.",
+              )}
+            </p>
+            <div className="flex flex-wrap gap-2 text-xs font-medium text-foreground">
+              <span className="flex items-center gap-2 rounded-full bg-yellow/25 px-3 py-2">
+                <ListMusic size={18} />
+                {t("Setlists")}
+              </span>
+              <span className="flex items-center gap-2 rounded-full bg-coral/20 px-3 py-2">
+                <Users size={18} />
+                {t("Players & parts")}
+              </span>
+              <span className="flex items-center gap-2 rounded-full bg-lavender/20 px-3 py-2">
+                <LayoutDashboard size={18} />
+                {t("Floorplans")}
+              </span>
+              <span className="flex items-center gap-2 rounded-full bg-primary/10 px-3 py-2">
+                <LayoutGrid size={18} />
+                {t("Musical apps")}
+              </span>
+            </div>
+          </div>
+          <div className="panda-hero relative mx-auto w-52 max-w-full sm:w-full sm:max-w-80">
+            <Music2 size={26} className="loading-note loading-note-left" aria-hidden="true" />
+            <img
+              src="/podiumpanda-full.png"
+              alt={t("PodiumPanda, a cheerful panda conductor waving a baton")}
+              width={764}
+              height={854}
+              className="panda-illustration w-full drop-shadow-lg"
+              fetchPriority="high"
+            />
+            <Music2 size={22} className="loading-note loading-note-right" aria-hidden="true" />
+            <Music3 size={18} className="hero-note hero-note-a" aria-hidden="true" />
+            <Music4 size={16} className="hero-note hero-note-b" aria-hidden="true" />
+            <Music3 size={14} className="hero-note hero-note-c" aria-hidden="true" />
+            <Music2 size={14} className="hero-note hero-note-d" aria-hidden="true" />
           </div>
         </div>
-        <div className="panda-hero relative mx-auto w-52 max-w-full sm:w-full sm:max-w-80">
-          <Music2 size={26} className="loading-note loading-note-left" aria-hidden="true" />
-          <img
-            src="/podiumpanda-full.png"
-            alt={t("PodiumPanda, a cheerful panda conductor waving a baton")}
-            width={764}
-            height={854}
-            className="panda-illustration w-full drop-shadow-lg"
-            fetchPriority="high"
-          />
-          <Music2 size={22} className="loading-note loading-note-right" aria-hidden="true" />
-        </div>
       </section>
-      {error && (
-        <p role="alert" className="text-destructive">
-          {dynamic(error)}
-        </p>
-      )}
-      <section className="space-y-4">
-        <div className="min-w-0 space-y-4">
-          <h2 className="section-title">{t("Your groups")}</h2>
-          {groups.length === 0 && (
-            <p className="text-muted-foreground">
-              {t("Create a group, or open a group link you received.")}
-            </p>
-          )}
-          <GroupCards groups={groups} />
-        </div>
-      </section>
-      <section className="space-y-4">
-        <h2 className="section-title">{t("Apps")}</h2>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {apps.map((app) => (
-            <AppCard key={app.to} app={app} />
-          ))}
-        </div>
-      </section>
-      {recent.length > 0 && (
-        <section className="space-y-4">
-          <h2 className="section-title">{t("Earlier concert shortcuts")}</h2>
-          <p className="text-sm text-muted-foreground">
-            {t("These older concerts remain accessible with their original links.")}
+      <main className="mx-auto max-w-7xl space-y-10 px-5 py-10">
+        {error && (
+          <p role="alert" className="text-destructive">
+            {dynamic(error)}
           </p>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            {recent.map((item) => (
-              <div
-                key={item.id}
-                className="concert-card panel relative flex items-start justify-between gap-3"
-              >
-                <Link
-                  to="/c/$concertId"
-                  params={{ concertId: item.id }}
-                  hash={`key=${item.key}`}
-                  className="min-w-0 flex-1 space-y-3 after:absolute after:inset-0 after:rounded-xl"
-                >
-                  <CalendarDays size={22} className="text-coral-foreground" />
-                  <h3 className="font-semibold break-words">{item.title}</h3>
-                  <span className="text-xs text-muted-foreground">{t("Open concert \u2192")}</span>
-                </Link>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="relative z-10"
-                  aria-label={t("Forget shortcut to {name}", { name: item.title })}
-                  onClick={() => {
-                    try {
-                      forget(item.id);
-                      setRecent(recents());
-                    } catch {
-                      setError("Could not remove the shortcut from browser storage.");
-                    }
-                  }}
-                >
-                  <X size={15} />
-                </Button>
-              </div>
+        )}
+        <section className="space-y-4">
+          <div className="min-w-0 space-y-4">
+            <h2 className="section-title">{t("Your groups")}</h2>
+            {groups.length === 0 && (
+              <p className="text-muted-foreground">
+                {t("Create a group, or open a group link you received.")}
+              </p>
+            )}
+            <GroupCards groups={groups} />
+          </div>
+        </section>
+        <section className="space-y-4">
+          <h2 className="section-title">{t("Apps")}</h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {apps.map((app) => (
+              <AppCard key={app.to} app={app} />
             ))}
           </div>
         </section>
-      )}
-    </main>
+        {recent.length > 0 && (
+          <section className="space-y-4">
+            <h2 className="section-title">{t("Earlier concert shortcuts")}</h2>
+            <p className="text-sm text-muted-foreground">
+              {t("These older concerts remain accessible with their original links.")}
+            </p>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+              {recent.map((item) => (
+                <div
+                  key={item.id}
+                  className="concert-card panel relative flex items-start justify-between gap-3"
+                >
+                  <Link
+                    to="/c/$concertId"
+                    params={{ concertId: item.id }}
+                    hash={`key=${item.key}`}
+                    className="min-w-0 flex-1 space-y-3 after:absolute after:inset-0 after:rounded-xl"
+                  >
+                    <CalendarDays size={22} className="text-coral-foreground" />
+                    <h3 className="font-semibold break-words">{item.title}</h3>
+                    <span className="text-xs text-muted-foreground">
+                      {t("Open concert \u2192")}
+                    </span>
+                  </Link>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="relative z-10"
+                    aria-label={t("Forget shortcut to {name}", { name: item.title })}
+                    onClick={() => {
+                      try {
+                        forget(item.id);
+                        setRecent(recents());
+                      } catch {
+                        setError("Could not remove the shortcut from browser storage.");
+                      }
+                    }}
+                  >
+                    <X size={15} />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+      </main>
+    </div>
   );
 }

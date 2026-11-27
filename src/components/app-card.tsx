@@ -64,9 +64,7 @@ export function AppCard({ app }: { app: AppDefinition }) {
       aria-label={t(app.name)}
       className="app-card concert-card group flex min-h-44 flex-col justify-between gap-6 rounded-2xl border border-l-4 border-l-coral bg-secondary/60 p-5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
     >
-      <span className={`block h-16 w-16 overflow-hidden ${app.iconColor}`}>
-        {animatedIcons[app.to]}
-      </span>
+      <span className="block h-16 w-16 overflow-hidden text-primary">{animatedIcons[app.to]}</span>
       <span className="block text-xl font-semibold leading-tight">{t(app.name)}</span>
     </Link>
   );

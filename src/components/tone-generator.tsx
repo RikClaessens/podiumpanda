@@ -156,7 +156,7 @@ export function ToneGenerator() {
 
   return (
     <AppPage app="/apps/tone-generator">
-      <section className="tuner-panel relative overflow-hidden rounded-[2rem] border p-5 sm:p-8">
+      <section className="relative">
         <div className="relative z-10 space-y-6">
           <div className="text-center">
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">
