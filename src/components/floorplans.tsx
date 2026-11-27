@@ -2,7 +2,7 @@ import { useLanguage } from "../lib/language";
 import { useEffect, useRef, useState } from "react";
 import { Group, Layer, Rect, Stage, Text, Line, Transformer } from "react-konva";
 import type Konva from "konva";
-import { Download, Plus } from "lucide-react";
+import { Download, Locate, Plus, RotateCcw, ZoomIn, ZoomOut } from "lucide-react";
 import { useTheme } from "next-themes";
 import { ofKind, type OfKind } from "../../shared/model";
 import { Button } from "./ui/button";
@@ -11,7 +11,15 @@ import { Checkbox } from "./ui/checkbox";
 import { Picker } from "./picker";
 import { DeleteButton, type EditorProps } from "./editors";
 import { EditToggle } from "./edit-toggle";
-import { transformFloorObject } from "../lib/floorplan-geometry";
+import {
+  clampView,
+  defaultView,
+  maxZoom,
+  minZoom,
+  transformFloorObject,
+  worldBounds,
+  worldRect,
+} from "../lib/floorplan-geometry";
 type StageObject = OfKind<"object">;
 const objectLabels = {
   chair: "Chair",
@@ -71,6 +79,27 @@ export default function Floorplans({ snapshot, busy, onEdit }: EditorProps) {
   const [width, setWidth] = useState(800);
   const wrapper = useRef<HTMLDivElement>(null);
   const stage = useRef<Konva.Stage>(null);
+  const [view, setView] = useState(defaultView);
+  const baseScale = width / 1000;
+  const stageScale = baseScale * view.zoom;
+  const stagePosition = {
+    x: width / 2 - view.cx * stageScale,
+    y: (width * 0.6) / 2 - view.cy * stageScale,
+  };
+  const zoomAt = (factor: number, screen = { x: width / 2, y: (width * 0.6) / 2 }) => {
+    const oldScale = stageScale;
+    const zoom = Math.max(minZoom, Math.min(maxZoom, view.zoom * factor));
+    const newScale = baseScale * zoom;
+    const worldX = (screen.x - stagePosition.x) / oldScale;
+    const worldY = (screen.y - stagePosition.y) / oldScale;
+    setView(
+      clampView({
+        zoom,
+        cx: (width / 2 - (screen.x - worldX * newScale)) / newScale,
+        cy: ((width * 0.6) / 2 - (screen.y - worldY * newScale)) / newScale,
+      }),
+    );
+  };
   useEffect(() => {
     if (!wrapper.current) return;
     const observer = new ResizeObserver(([entry]) => setWidth(entry.contentRect.width));
@@ -279,13 +308,76 @@ export default function Floorplans({ snapshot, busy, onEdit }: EditorProps) {
               )}
             </p>
           )}
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              aria-label={t("Zoom in")}
+              disabled={view.zoom >= maxZoom}
+              onClick={() => zoomAt(1.25)}
+            >
+              <ZoomIn size={14} />
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              aria-label={t("Zoom out")}
+              disabled={view.zoom <= minZoom}
+              onClick={() => zoomAt(0.8)}
+            >
+              <ZoomOut size={14} />
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setView(clampView({ ...view, cx: 500, cy: 300 }))}
+            >
+              <Locate size={14} />
+              {t("Center")}
+            </Button>
+            <Button size="sm" variant="outline" onClick={() => setView(defaultView)}>
+              <RotateCcw size={14} />
+              {t("Reset zoom")}
+            </Button>
+            <span className="text-xs text-muted-foreground">{Math.round(view.zoom * 100)}%</span>
+          </div>
           <div ref={wrapper} className="overflow-hidden rounded-lg border bg-card">
             <Stage
               ref={stage}
               width={width}
               height={width * 0.6}
-              scaleX={width / 1000}
-              scaleY={width / 1000}
+              x={stagePosition.x}
+              y={stagePosition.y}
+              scaleX={stageScale}
+              scaleY={stageScale}
+              draggable
+              dragBoundFunc={(position) => {
+                const next = clampView({
+                  zoom: view.zoom,
+                  cx: (width / 2 - position.x) / stageScale,
+                  cy: ((width * 0.6) / 2 - position.y) / stageScale,
+                });
+                return {
+                  x: width / 2 - next.cx * stageScale,
+                  y: (width * 0.6) / 2 - next.cy * stageScale,
+                };
+              }}
+              onDragEnd={(event) => {
+                const target = event.target;
+                if (target !== target.getStage()) return;
+                setView(
+                  clampView({
+                    zoom: view.zoom,
+                    cx: (width / 2 - target.x()) / stageScale,
+                    cy: ((width * 0.6) / 2 - target.y()) / stageScale,
+                  }),
+                );
+              }}
+              onWheel={(event) => {
+                event.evt.preventDefault();
+                const pointer = event.target.getStage()?.getPointerPosition();
+                if (pointer) zoomAt(event.evt.deltaY < 0 ? 1.1 : 1 / 1.1, pointer);
+              }}
               onMouseDown={(event) => {
                 if (event.target === event.target.getStage()) setSelection(null);
               }}
@@ -294,29 +386,39 @@ export default function Floorplans({ snapshot, busy, onEdit }: EditorProps) {
               }}
             >
               <Layer>
-                <Rect width={1000} height={600} fill={colors.background} listening={false} />
+                <Rect {...worldRect} fill={colors.background} listening={false} />
                 {showGrid &&
-                  Array.from({ length: 19 }, (_, i) => (
+                  Array.from({ length: 59 }, (_, i) => (
                     <Line
                       key={`x-${i}`}
-                      points={[(i + 1) * 50, 0, (i + 1) * 50, 600]}
+                      points={[
+                        (i - 19) * 50,
+                        worldRect.y,
+                        (i - 19) * 50,
+                        worldRect.y + worldRect.height,
+                      ]}
                       stroke={colors.grid}
                       listening={false}
                     />
                   ))}
                 {showGrid &&
-                  Array.from({ length: 11 }, (_, i) => (
+                  Array.from({ length: 35 }, (_, i) => (
                     <Line
                       key={`y-${i}`}
-                      points={[0, (i + 1) * 50, 1000, (i + 1) * 50]}
+                      points={[
+                        worldRect.x,
+                        (i - 11) * 50,
+                        worldRect.x + worldRect.width,
+                        (i - 11) * 50,
+                      ]}
                       stroke={colors.grid}
                       listening={false}
                     />
                   ))}
                 <Text
-                  x={0}
-                  y={565}
-                  width={1000}
+                  x={worldRect.x}
+                  y={worldRect.y + worldRect.height - 35}
+                  width={worldRect.width}
                   align="center"
                   text={t("Audience").toUpperCase()}
                   fontSize={14}
@@ -336,7 +438,7 @@ export default function Floorplans({ snapshot, busy, onEdit }: EditorProps) {
                     onSelect={() => setSelection(object.id)}
                     colors={colors}
                     editing={editing}
-                    canvasScale={width / 1000}
+                    canvasScale={stageScale}
                     {...{ snapshot, busy, onEdit }}
                   />
                 ))}
@@ -430,8 +532,8 @@ function FloorObject({
         }}
         onDragEnd={async (event) => {
           const target = event.target;
-          const x = Math.max(0, Math.min(1000 - object.width, target.x()));
-          const y = Math.max(0, Math.min(550 - object.height, target.y()));
+          const x = Math.max(worldBounds.minX, Math.min(worldBounds.maxX, target.x()));
+          const y = Math.max(worldBounds.minY, Math.min(worldBounds.maxY, target.y()));
           target.position({ x, y });
           const success = await onEdit(
             { type: "put", entity: { ...drag.current.entity, x, y } },

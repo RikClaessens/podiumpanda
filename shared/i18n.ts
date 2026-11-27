@@ -341,6 +341,9 @@ export const dutch = {
   "Main stage": "Hoofdpodium",
   Audience: "Publiek",
   "Show gridlines": "Rasterlijnen tonen",
+  "Zoom in": "Inzoomen",
+  "Zoom out": "Uitzoomen",
+  "Reset zoom": "Zoom herstellen",
   "Audience at the bottom. Drag objects to move them; select one to resize or rotate it using the handles.":
     "Het publiek zit onderaan. Sleep objecten om ze te verplaatsen; selecteer een object om het met de handvatten te vergroten, verkleinen of draaien.",
   "Select an object on stage or from the list below.":

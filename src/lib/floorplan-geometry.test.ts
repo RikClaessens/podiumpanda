@@ -56,13 +56,13 @@ describe("floorplan object transforms", () => {
     });
     if (object.kind !== "object") throw new Error("Invalid fixture");
     const result = transformFloorObject(object, {
-      x: -30,
-      y: 600,
+      x: -3000,
+      y: 2000,
       scaleX: 0.01,
       scaleY: 30,
       rotation: 730,
     });
-    expect(result).toMatchObject({ x: 0, y: 550, width: 10, height: 500, rotation: 10 });
+    expect(result).toMatchObject({ x: -1000, y: 1150, width: 10, height: 500, rotation: 10 });
     expect(entitySchema.parse(result)).toEqual(result);
   });
 });

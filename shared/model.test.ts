@@ -368,7 +368,7 @@ describe("concert editing", () => {
           playerId: null,
           partId: null,
           label: "",
-          x: -1,
+          x: -1001,
           y: 0,
           width: 50,
           height: 50,
