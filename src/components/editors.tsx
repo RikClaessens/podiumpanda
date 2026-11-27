@@ -532,6 +532,12 @@ function PartPill({
     entity: OfKind<"part">;
     revision: number;
   } | null>(null);
+  const assignments = ofKind(snapshot, "assignment");
+  const assignedPlayers = ofKind(snapshot, "player").filter((player) =>
+    assignments.some(
+      (assignment) => assignment.partId === part.id && assignment.playerId === player.id,
+    ),
+  );
   return (
     <div className="flex max-w-full items-center gap-1 rounded-lg border px-2 py-1 dark:border-[#705b84] dark:bg-[#4b3560]">
       {editing && draft ? (
@@ -572,6 +578,12 @@ function PartPill({
           <span className="break-all text-sm" title={part.notes}>
             {part.name}
           </span>
+          {assignedPlayers.length > 0 && (
+            <span className="min-w-0 break-words text-sm text-muted-foreground">
+              {" · "}
+              {assignedPlayers.map((player) => player.name).join(", ")}
+            </span>
+          )}
           {editing && (
             <>
               <Button
