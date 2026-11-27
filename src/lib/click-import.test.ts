@@ -1,6 +1,7 @@
 import { deflateRawSync } from "node:zlib";
 import { describe, expect, it } from "vitest";
 import { importMuseScore, importMusicXml, importScoreFile, unroll } from "./click-import";
+import { playOrder } from "./click-track";
 import { parseXml } from "./xml";
 
 const measureXml = (extra = "", attributes = "") =>
@@ -58,8 +59,28 @@ describe("MusicXML import", () => {
         measureXml(),
       ]),
     );
-    // 1 2 3(1st ending) 2 4(2nd ending) 5
-    expect(track.bars).toBe(6);
+    expect(track.bars).toBe(5);
+    expect(track.repeats).toEqual([{ from: 2, to: 3 }]);
+    expect(track.endings).toEqual([
+      { from: 3, to: 3, passes: [1] },
+      { from: 4, to: 4, passes: [2] },
+    ]);
+    expect(playOrder(track).map((step) => step.bar)).toEqual([1, 2, 3, 2, 4, 5]);
+  });
+
+  it("reads fermatas, mid-bar tempo changes, swing and additive meters", () => {
+    const note = `<note><pitch><step>C</step><octave>4</octave></pitch><duration>1</duration></note>`;
+    const fermata = `<note><pitch><step>C</step><octave>4</octave></pitch><duration>1</duration><notations><fermata/></notations></note>`;
+    const tempo = (bpm: number) => `<direction><sound tempo="${bpm}"/></direction>`;
+    const track = importMusicXml(
+      `<score-partwise><part id="P1">
+        <measure number="1"><attributes><divisions>1</divisions><time><beats>2+2+3</beats><beat-type>8</beat-type></time></attributes>${tempo(120)}<direction><direction-type><words>rit.</words></direction-type></direction>${note}${note}${note}${note}${note}${note}${fermata}</measure>
+        <measure number="2">${note}${tempo(60)}${note}${note}${note}</measure>
+      </part></score-partwise>`,
+    );
+    expect(track.sections[0].group).toEqual([2, 2, 3]);
+    expect(track.fermatas?.length).toBe(1);
+    expect(track.sections.some((section) => section.beat)).toBe(true);
   });
 
   it("rejects non MusicXML content", () => {
@@ -104,10 +125,11 @@ describe("MuseScore import", () => {
   it("reads tempo (quarter notes per second), repeats and pickup lengths", () => {
     const track = importMuseScore(mscx);
     expect(track.title).toBe("Song");
-    expect(track.bars).toBe(5);
+    expect(track.bars).toBe(3);
+    expect(track.repeats).toEqual([{ from: 1, to: 2 }]);
     expect(track.sections).toEqual([
       { bar: 1, beats: 3, unit: 4, bpm: 90 },
-      { bar: 5, beats: 1, unit: 4, bpm: 90 },
+      { bar: 3, beats: 1, unit: 4, bpm: 90 },
     ]);
   });
 
@@ -138,7 +160,7 @@ describe("MuseScore import", () => {
       end.writeUInt32LE(entry.length, 16);
       return new Uint8Array(Buffer.concat([entry, central, nameBytes, end]));
     };
-    expect((await importScoreFile("song.mscz", zip("song.mscx", mscx, 8))).bars).toBe(5);
+    expect((await importScoreFile("song.mscz", zip("song.mscx", mscx, 8))).bars).toBe(3);
     expect((await importScoreFile("song.mscz", zip("song.mscx", mscx, 0))).title).toBe("Song");
     await expect(importScoreFile("song.txt", new Uint8Array())).rejects.toThrow(/Unsupported/);
   });

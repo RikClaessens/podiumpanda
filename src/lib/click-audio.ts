@@ -52,17 +52,31 @@ const voices: Record<ClickSound, Voice> = {
   },
 };
 
+export type ClickStrength = "accent" | "medium" | "beat" | "sub";
+
+const strengths: Record<ClickStrength, { pitch: number; volume: number }> = {
+  accent: { pitch: 0, volume: 0.42 },
+  medium: { pitch: 0.5, volume: 0.32 },
+  beat: { pitch: 1, volume: 0.24 },
+  sub: { pitch: 2, volume: 0.1 },
+};
+
 export function scheduleClick(
   context: AudioContext,
   time: number,
-  accented: boolean,
-  mainBeat: boolean,
+  strength: ClickStrength,
   countIn = false,
   sound: ClickSound = DEFAULT_CLICK_SOUND,
 ) {
   const voice = voices[sound];
-  const base = voice.pitches[accented ? 0 : mainBeat ? 1 : 2] * (countIn ? 0.75 : 1);
-  const volume = (accented ? 0.42 : mainBeat ? 0.24 : 0.1) * voice.gain;
+  const { pitch, volume: level } = strengths[strength];
+  const lower = Math.floor(pitch);
+  const upper = Math.ceil(pitch);
+  const base =
+    (upper === lower
+      ? voice.pitches[lower]
+      : Math.sqrt(voice.pitches[lower] * voice.pitches[upper])) * (countIn ? 0.75 : 1);
+  const volume = level * voice.gain;
   const gain = context.createGain();
   gain.gain.setValueAtTime(0.0001, time);
   gain.gain.exponentialRampToValueAtTime(volume, time + 0.003);
@@ -90,8 +104,8 @@ export function previewClick(sound: ClickSound) {
     if (!previewContext || previewContext.state === "closed") previewContext = new AudioContext();
     const context = previewContext;
     void context.resume();
-    scheduleClick(context, context.currentTime + 0.02, true, true, false, sound);
-    scheduleClick(context, context.currentTime + 0.42, false, true, false, sound);
+    scheduleClick(context, context.currentTime + 0.02, "accent", false, sound);
+    scheduleClick(context, context.currentTime + 0.42, "beat", false, sound);
   } catch (error) {
     console.warn("Could not preview the click sound.", error);
   }

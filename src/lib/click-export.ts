@@ -1,10 +1,11 @@
-import { clickTimes, expandBars, beatSeconds, type ClickTrack } from "./click-track";
+import { barPulses, clickTimes, expandBars, trackSeconds, type ClickTrack } from "./click-track";
 
 const PPQ = 480;
 const ACCENT_NOTE = 34;
 const CLICK_NOTE = 33;
 const COUNT_IN_ACCENT_NOTE = 76;
 const COUNT_IN_NOTE = 77;
+const SUB_NOTE = 37;
 
 function varLength(value: number) {
   const bytes = [value & 0x7f];
@@ -50,7 +51,7 @@ export function trackToMidi(track: ClickTrack): Uint8Array {
   let signature = "";
   let tempo = -1;
   for (const plan of expandBars(track)) {
-    const beatTicks = (PPQ * 4) / plan.unit;
+    const unitTicks = (PPQ * 4) / plan.unit;
     if (`${plan.beats}/${plan.unit}` !== signature) {
       signature = `${plan.beats}/${plan.unit}`;
       tempoEvents.push({
@@ -59,16 +60,18 @@ export function trackToMidi(track: ClickTrack): Uint8Array {
         bytes: [0xff, 0x58, 0x04, plan.beats, Math.log2(plan.unit), 24, 8],
       });
     }
-    for (let beat = 0; beat < plan.beats; beat++) {
+    let pulseStart = tick;
+    for (const pulse of barPulses(plan)) {
+      const pulseTicks = pulse.units * unitTicks;
       // A MIDI tempo holds at most 16.7 seconds per quarter note, which caps long fermatas.
       const microseconds = Math.min(
         0xffffff,
-        Math.round((beatSeconds(plan, beat) * 1_000_000 * PPQ) / beatTicks),
+        Math.round((pulse.seconds * 1_000_000 * PPQ) / pulseTicks),
       );
       if (microseconds !== tempo) {
         tempo = microseconds;
         tempoEvents.push({
-          tick: tick + beat * beatTicks,
+          tick: pulseStart,
           order: 2,
           bytes: [
             0xff,
@@ -81,21 +84,33 @@ export function trackToMidi(track: ClickTrack): Uint8Array {
         });
       }
       const countIn = plan.bar === 0;
-      const note =
-        beat === 0
-          ? countIn
-            ? COUNT_IN_ACCENT_NOTE
-            : ACCENT_NOTE
-          : countIn
-            ? COUNT_IN_NOTE
-            : CLICK_NOTE;
-      const start = tick + beat * beatTicks;
-      clickEvents.push(
-        { tick: start, order: 1, bytes: [0x99, note, beat === 0 ? 112 : 88] },
-        { tick: start + Math.max(1, Math.floor(beatTicks / 4)), order: 0, bytes: [0x89, note, 0] },
-      );
+      const strong = pulse.level === 3;
+      const note = strong
+        ? countIn
+          ? COUNT_IN_ACCENT_NOTE
+          : ACCENT_NOTE
+        : countIn
+          ? COUNT_IN_NOTE
+          : CLICK_NOTE;
+      const length = Math.max(1, Math.floor(Math.min(pulseTicks, unitTicks) / 4));
+      const hits = [
+        ...(pulse.level === 0
+          ? []
+          : [{ at: pulseStart, note, velocity: [0, 70, 96, 112][pulse.level] }]),
+        ...pulse.subOffsets.map((offset) => ({
+          at: pulseStart + Math.round((pulseTicks * offset) / pulse.seconds),
+          note: SUB_NOTE,
+          velocity: 60,
+        })),
+      ];
+      for (const hit of hits)
+        clickEvents.push(
+          { tick: hit.at, order: 1, bytes: [0x99, hit.note, hit.velocity] },
+          { tick: hit.at + length, order: 0, bytes: [0x89, hit.note, 0] },
+        );
+      pulseStart += pulseTicks;
     }
-    tick += plan.beats * beatTicks;
+    tick = pulseStart;
   }
   const header = [0x4d, 0x54, 0x68, 0x64, 0, 0, 0, 6, 0, 1, 0, 2, (PPQ >> 8) & 0xff, PPQ & 0xff];
   return Uint8Array.from([
@@ -107,17 +122,16 @@ export function trackToMidi(track: ClickTrack): Uint8Array {
 
 export function trackToWav(track: ClickTrack, sampleRate = 44100): Uint8Array {
   const clicks = clickTimes(track);
-  const plans = expandBars(track);
-  const last = plans[plans.length - 1];
-  const total = clicks.length
-    ? clicks[clicks.length - 1].time + beatSeconds(last, last.beats - 1)
-    : 0;
+  const total = trackSeconds(track);
   const samples = new Int16Array(Math.ceil(total * sampleRate) + sampleRate / 10);
   const burst = Math.floor(sampleRate * 0.06);
   for (const click of clicks) {
     const start = Math.round(click.time * sampleRate);
-    const frequency = click.bar === 0 ? (click.accent ? 990 : 660) : click.accent ? 1320 : 880;
-    const volume = click.accent ? 0.7 : 0.45;
+    if (click.level === 0 && click.sub === 0) continue;
+    const pitch = click.sub > 0 ? 0.65 : click.level === 2 ? 0.88 : 1;
+    const frequency =
+      (click.bar === 0 ? (click.accent ? 990 : 660) : click.accent ? 1320 : 880) * pitch;
+    const volume = click.accent ? 0.7 : click.sub > 0 ? 0.25 : click.level === 2 ? 0.55 : 0.45;
     for (let index = 0; index < burst && start + index < samples.length; index++) {
       const envelope = Math.exp((-index / burst) * 6) * Math.min(1, index / (sampleRate * 0.002));
       samples[start + index] = Math.round(

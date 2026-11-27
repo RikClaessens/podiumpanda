@@ -69,8 +69,7 @@ export function Metronome() {
           scheduleClick(
             context,
             nextNoteTime,
-            beat === 0 && isMainBeat,
-            isMainBeat,
+            beat === 0 && isMainBeat ? "accent" : isMainBeat ? "beat" : "sub",
             false,
             soundRef.current,
           );

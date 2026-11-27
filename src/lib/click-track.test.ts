@@ -5,6 +5,7 @@ import {
   clickTimes,
   formatTrackText,
   parseTrackText,
+  playOrder,
   sectionsFromBars,
   trackSeconds,
   type ClickTrack,
@@ -106,5 +107,57 @@ describe("fermatas", () => {
   it("rejects fermatas outside the track", () => {
     expect(parseTrackText(`${base}fermata: 2 5 1`)).toHaveProperty("error");
     expect(parseTrackText(`${base}fermata: 9 1 1`)).toHaveProperty("error");
+  });
+});
+
+describe("repeats, jumps and timing", () => {
+  const parse = (text: string) => {
+    const result = parseTrackText(text);
+    if ("error" in result) throw new Error(result.error);
+    return result.track;
+  };
+  const base = "count-in: 0\nbars: 6\n1 4/4 120\n";
+
+  it("expands repeats with volta endings", () => {
+    const parsed = parse(`${base}repeat: 2-3\nending: 3 1\nending: 4 2`);
+    expect(playOrder(parsed).map((step) => step.bar)).toEqual([1, 2, 3, 2, 4, 5, 6]);
+  });
+
+  it("plays D.S. al coda", () => {
+    const parsed = parse(`${base}segno: 2\ntocoda: 3\ncoda: 5\nds al coda: 4`);
+    expect(playOrder(parsed).map((step) => step.bar)).toEqual([1, 2, 3, 4, 2, 3, 5, 6]);
+  });
+
+  it("lowers rit. and a tempo into plain tempo rows", () => {
+    const parsed = parse(`${base}rit: 2-3 to 50%\na tempo: 5`);
+    expect(parsed.sections).toEqual([
+      { bar: 1, beats: 4, unit: 4, bpm: 120 },
+      { bar: 2, beats: 4, unit: 4, bpm: 120, endBpm: 60 },
+      { bar: 4, beats: 4, unit: 4, bpm: 60 },
+      { bar: 5, beats: 4, unit: 4, bpm: 120 },
+    ]);
+  });
+
+  it("times a mid-bar tempo change, grouped pulses and a caesura", () => {
+    const plain = trackSeconds(parse(base), { countIn: false });
+    const changed = parse(`${base}tempo: 1 3 60`);
+    // Bar 1 takes 3s instead of 2s, and the five bars after it keep the slower tempo
+    expect(trackSeconds(changed, { countIn: false }) - plain).toBeCloseTo(11, 5);
+    const grouped = clickTimes(parse("count-in: 0\nbars: 1\n1 6/8 120 group:3+3"), {
+      countIn: false,
+    });
+    expect(grouped.filter((click) => click.sub === 0)).toHaveLength(2);
+    const paused = parse(`${base}caesura: 1 end`);
+    expect(trackSeconds(paused, { countIn: false }) - plain).toBeCloseTo(0.5, 5);
+  });
+
+  it("round-trips the example and a MIDI fermata", () => {
+    const example = parse(EXAMPLE_TRACK_TEXT);
+    expect(parseTrackText(formatTrackText(example))).toEqual({ track: example });
+    const held = parse(`${base}fermata: 2 4 2`);
+    const imported = importMidi(trackToMidi(held));
+    expect(imported.fermatas?.map(({ bar, beat }) => ({ bar, beat }))).toEqual([
+      { bar: 2, beat: 4 },
+    ]);
   });
 });

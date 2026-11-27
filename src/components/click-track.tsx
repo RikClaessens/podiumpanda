@@ -1,15 +1,28 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { CircleHelp, Download, FileText, Pause, Play, Upload } from "lucide-react";
+import {
+  Check,
+  CircleHelp,
+  Download,
+  ExternalLink,
+  FileText,
+  Link,
+  Pause,
+  Play,
+  Upload,
+} from "lucide-react";
 import { useLanguage } from "../lib/language";
 import { AppPage } from "./app-page";
 import { ClickTrackView } from "./click-track-view";
 import { ClickSoundPicker, useClickSound } from "./click-sound-picker";
 import { Button } from "./ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Link as RouterLink } from "@tanstack/react-router";
+import { ClickTrackHelp } from "./click-track-help";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Input } from "./ui/input";
 import { scheduleClick } from "../lib/click-audio";
 import { trackToMidi, trackToWav } from "../lib/click-export";
 import { ImportError, importScoreFile } from "../lib/click-import";
+import { decodeShare, sharedValue, shareUrl } from "../lib/click-share";
 import {
   clickAtSeconds,
   EXAMPLE_TRACK_TEXT,
@@ -42,13 +55,31 @@ function download(bytes: Uint8Array, type: string, name: string) {
   window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
+const STORAGE_KEY = "podiumpanda:click-track";
+
+function savedState(): { text: string; fromBar: string } {
+  try {
+    const saved: unknown = JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? "null");
+    if (saved && typeof saved === "object") {
+      const { text, fromBar } = saved as Record<string, unknown>;
+      if (typeof text === "string")
+        return { text, fromBar: typeof fromBar === "string" ? fromBar : "1" };
+    }
+  } catch (error) {
+    console.warn("Could not read the saved click track.", error);
+  }
+  return { text: formatTrackText(sampleTrack), fromBar: "1" };
+}
+
 export function ClickTrackApp() {
   const { t } = useLanguage();
-  const [text, setText] = useState(() => formatTrackText(sampleTrack));
-  const [fromBar, setFromBar] = useState("1");
+  const [initial] = useState(savedState);
+  const [text, setText] = useState(initial.text);
+  const [fromBar, setFromBar] = useState(initial.fromBar);
   const [isPlaying, setIsPlaying] = useState(false);
   const [position, setPosition] = useState({ bar: 0, bpm: 0, index: 0, beat: 0 });
   const [error, setError] = useState("");
+  const [copied, setCopied] = useState(false);
   const audioContext = useRef<AudioContext | null>(null);
   const { sound, change: changeSound, saveFailed } = useClickSound();
   const soundRef = useRef(sound);
@@ -59,6 +90,40 @@ export function ClickTrackApp() {
   const parsed = useMemo(() => parseTrackText(text), [text]);
   const track = "track" in parsed ? parsed.track : null;
   const seconds = track ? trackSeconds(track, { countIn: false }) : 0;
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ text, fromBar }));
+    } catch (saveError) {
+      console.warn("Could not save the click track.", saveError);
+    }
+  }, [text, fromBar]);
+
+  useEffect(() => {
+    const value = sharedValue(window.location.hash);
+    if (!value) return;
+    let cancelled = false;
+    void decodeShare(value).then((shared) => {
+      if (cancelled) return;
+      if (shared === null) setError(t("This share link could not be read."));
+      else setText(shared);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [t]);
+
+  async function share() {
+    setError("");
+    try {
+      await navigator.clipboard.writeText(await shareUrl(text, window.location));
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch (shareError) {
+      console.warn("Could not copy the share link.", shareError);
+      setError(t("Could not copy the share link."));
+    }
+  }
 
   useEffect(
     () => () => {
@@ -78,14 +143,23 @@ export function ClickTrackApp() {
       const now = context.currentTime - current.origin;
       while (next < current.clicks.length && current.clicks[next].time < now + 0.15) {
         const click = current.clicks[next];
-        scheduleClick(
-          context,
-          current.origin + click.time,
-          click.accent,
-          true,
-          click.bar === 0,
-          soundRef.current,
-        );
+        const strength = click.sub
+          ? "sub"
+          : click.level === 3
+            ? "accent"
+            : click.level === 2
+              ? "medium"
+              : click.level === 1
+                ? "beat"
+                : null;
+        if (strength)
+          scheduleClick(
+            context,
+            current.origin + click.time,
+            strength,
+            click.bar === 0,
+            soundRef.current,
+          );
         next++;
       }
       const active = now >= 0 ? clickAtSeconds(current.clicks, now) : undefined;
@@ -123,7 +197,9 @@ export function ClickTrackApp() {
     }
     const all = clickTimes(track);
     const startBar = Math.max(1, Math.floor(Number(fromBar)) || 1);
-    const first = startBar > 1 ? all.findIndex((click) => click.bar >= startBar) : 0;
+    const exact = all.findIndex((click) => click.bar === startBar);
+    const first =
+      startBar > 1 ? (exact >= 0 ? exact : all.findIndex((click) => click.bar >= startBar)) : 0;
     if (first < 0) {
       setError(t("That bar is beyond the end of the track."));
       return;
@@ -210,8 +286,12 @@ export function ClickTrackApp() {
                 <FileText size={15} />
                 {t("Insert example")}
               </Button>
-              <Popover>
-                <PopoverTrigger asChild>
+              <Button type="button" variant="ghost" size="sm" onClick={() => void share()}>
+                {copied ? <Check size={15} /> : <Link size={15} />}
+                {copied ? t("Link copied") : t("Copy share link")}
+              </Button>
+              <Sheet>
+                <SheetTrigger asChild>
                   <Button
                     type="button"
                     variant="ghost"
@@ -221,71 +301,19 @@ export function ClickTrackApp() {
                   >
                     <CircleHelp size={18} />
                   </Button>
-                </PopoverTrigger>
-                <PopoverContent
-                  align="end"
-                  sideOffset={8}
-                  className="max-h-[var(--radix-popover-content-available-height)] w-96 max-w-[calc(100vw-2rem)] space-y-3 overflow-y-auto text-sm"
-                >
-                  <h2 className="text-lg font-semibold">{t("Notation help")}</h2>
-                  <p>{t("Each line is a header, a section row or a comment.")}</p>
-                  <dl className="space-y-2">
-                    <div>
-                      <dt className="font-mono font-semibold">title: Name</dt>
-                      <dd className="text-muted-foreground">
-                        {t("Optional name, used for the downloaded files.")}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="font-mono font-semibold">count-in: 2</dt>
-                      <dd className="text-muted-foreground">
-                        {t("Bars of count-in before bar 1, from 0 to 8. It sounds slightly lower.")}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="font-mono font-semibold">bars: 28</dt>
-                      <dd className="text-muted-foreground">
-                        {t("Total number of bars, not counting the count-in.")}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="font-mono font-semibold">1 4/4 96</dt>
-                      <dd className="text-muted-foreground">
-                        {t(
-                          "Section row: from this bar on, use this time signature and tempo. The first row must be bar 1. The tempo is always in quarter notes per minute.",
-                        )}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="font-mono font-semibold">13 4/4 100-&gt;140</dt>
-                      <dd className="text-muted-foreground">
-                        {t(
-                          "Gradual tempo change: the tempo moves in a straight line up to the next row, or to the end of the track.",
-                        )}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="font-mono font-semibold">fermata: 8 3 2</dt>
-                      <dd className="text-muted-foreground">
-                        {t(
-                          "Fermata: in bar 8, beat 3 is held for 2 extra seconds before the next click. The seconds are optional (2 by default). MIDI files hold at most about 16 seconds.",
-                        )}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="font-mono font-semibold"># comment</dt>
-                      <dd className="text-muted-foreground">
-                        {t("Lines starting with # are ignored.")}
-                      </dd>
-                    </div>
-                  </dl>
-                  <p className="text-muted-foreground">
-                    {t(
-                      "The click follows the bottom number of the time signature: 6/8 gives six clicks per bar, with an accent on the first. Imported scores keep their repeats, endings and jumps, so the click follows the played order. Fermatas in imported scores are not detected. Exports include the count-in.",
-                    )}
-                  </p>
-                </PopoverContent>
-              </Popover>
+                </SheetTrigger>
+                <SheetContent title={t("Notation help")}>
+                  <ClickTrackHelp />
+                  <RouterLink
+                    to="/apps/click-track/help"
+                    target="_blank"
+                    className="inline-flex items-center gap-1 text-sm font-medium text-primary underline-offset-4 hover:underline"
+                  >
+                    <ExternalLink size={14} />
+                    {t("Open on a separate page")}
+                  </RouterLink>
+                </SheetContent>
+              </Sheet>
             </div>
           </div>
           {isPlaying && track ? (

@@ -514,6 +514,9 @@ export const dutch = {
   "rit.": "rit.",
   "Insert example": "Voorbeeld invoegen",
   "Notation help": "Uitleg notatie",
+  "Back to the app": "Terug naar de app",
+  To: "Naar",
+  "Open on a separate page": "Open op een aparte pagina",
   "Each line is a header, a section row or a comment.":
     "Elke regel is een kopregel, een sectieregel of commentaar.",
   "Optional name, used for the downloaded files.":
@@ -529,8 +532,30 @@ export const dutch = {
   "Fermata: in bar 8, beat 3 is held for 2 extra seconds before the next click. The seconds are optional (2 by default). MIDI files hold at most about 16 seconds.":
     "Fermate: in maat 8 wordt tel 3 nog 2 extra seconden aangehouden voor de volgende klik. De seconden zijn optioneel (standaard 2). MIDI-bestanden houden maximaal ongeveer 16 seconden aan.",
   "Lines starting with # are ignored.": "Regels die met # beginnen worden genegeerd.",
-  "The click follows the bottom number of the time signature: 6/8 gives six clicks per bar, with an accent on the first. Imported scores keep their repeats, endings and jumps, so the click follows the played order. Fermatas in imported scores are not detected. Exports include the count-in.":
-    "De klik volgt het onderste getal van de maatsoort: 6/8 geeft zes klikken per maat, met een accent op de eerste. Geïmporteerde partituren behouden hun herhalingen, eindes en sprongen, zodat de klik de gespeelde volgorde volgt. Fermates in geïmporteerde partituren worden niet herkend. Exports bevatten de inleidende maten.",
+  "The click follows the bottom number of the time signature: 6/8 gives six clicks per bar, with an accent on the first. Imported scores keep their repeats, endings and jumps, so the click follows the played order. Fermatas, caesuras, tempo changes, swing and additive meters in imported scores are kept where the file describes them. Exports include the count-in.":
+    "De klik volgt het onderste getal van de maatsoort: 6/8 geeft zes klikken per maat, met een accent op de eerste. Geïmporteerde partituren behouden hun herhalingen, eindes en sprongen, zodat de klik de gespeelde volgorde volgt. Fermates, cesuren, tempowisselingen, swing en additieve maatsoorten in geïmporteerde partituren blijven behouden voor zover het bestand ze beschrijft. Exports bevatten de inleidende maten.",
+  "Optional row settings: group splits the bar into pulses (3+3 clicks twice in 6/8), sub adds soft subdivisions, swing delays the off-beat of a pair (50-90%), accent sets the strength of each pulse from 0 (silent) to 3.":
+    "Optionele rij-instellingen: group verdeelt de maat in pulsen (3+3 klikt twee keer in 6/8), sub voegt zachte onderverdelingen toe, swing vertraagt de tweede noot van een paar (50-90%), accent bepaalt de sterkte van elke puls van 0 (stil) tot 3.",
+  "Tempo change inside bar 12, from beat 3 on. Optionally with a gradual change.":
+    "Tempowisseling binnen maat 12, vanaf tel 3. Eventueel geleidelijk.",
+  "Repeat bars 24 to 36 two more times (once by default). 36-24 also works.":
+    "Herhaal maat 24 tot 36 nog twee keer (standaard één keer). 36-24 werkt ook.",
+  "Volta ending: bar 35 is only played on passes 1 and 2. Use 35-36 for a range.":
+    "Volta-einde: maat 35 wordt alleen in doorgang 1 en 2 gespeeld. Gebruik 35-36 voor een bereik.",
+  "Navigation marks. Only one of each is supported.":
+    "Navigatietekens. Van elk wordt er één ondersteund.",
+  "D.S. (or dc) from bar 40, optionally al fine or al coda.":
+    "D.S. (of dc) vanaf maat 40, eventueel al fine of al coda.",
+  "Short pause (//) after beat 8. Use a beat number or end.":
+    "Korte pauze (//) na tel 8. Gebruik een telnummer of end.",
+  "rit., rall., accel. and molto variants change the tempo over the bars, to a percentage or a tempo. a tempo: 21 restores the original tempo.":
+    "rit., rall., accel. en molto-varianten wijzigen het tempo over de maten, naar een percentage of tempo. a tempo: 21 herstelt het oorspronkelijke tempo.",
+  "Copy share link": "Deellink kopiëren",
+  "Link copied": "Link gekopieerd",
+  "This share link could not be read.": "Deze deellink kan niet gelezen worden.",
+  "Could not copy the share link.": "De deellink kon niet gekopieerd worden.",
+  "al Fine": "al Fine",
+  "al Coda": "al Coda",
   Classic: "Klassiek",
   "Wood block": "Woodblock",
   "Digital beep": "Digitale piep",
