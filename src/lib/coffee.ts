@@ -6,8 +6,8 @@ export type CoffeeChoice = CoffeePresetId | "custom";
 // Amounts are only displayed; keep them equal to the fixed amounts of the Mollie links.
 export const coffeePresets: { id: CoffeePresetId; cents: number }[] = [
   { id: "espresso", cents: 250 },
-  { id: "coffeeAndCroissant", cents: 400 },
-  { id: "coffeeAndCake", cents: 600 },
+  { id: "coffeeAndCroissant", cents: 500 },
+  { id: "coffeeAndCake", cents: 1000 },
 ];
 
 // Reusable Mollie payment links: fixed amounts for presets, "customer sets the price" for custom.

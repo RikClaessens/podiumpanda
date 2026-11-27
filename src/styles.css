@@ -335,6 +335,19 @@ label {
   background: currentColor;
   opacity: 0.45;
 }
+.footer-coffee-cup {
+  overflow: visible;
+}
+/* Lucide Coffee's first, second, and fourth paths are its steam. */
+.footer-coffee-cup path:nth-child(1) {
+  stroke: var(--color-yellow);
+}
+.footer-coffee-cup path:nth-child(2) {
+  stroke: var(--color-lilac);
+}
+.footer-coffee-cup path:nth-child(4) {
+  stroke: var(--color-coral);
+}
 .treat-particle {
   position: absolute;
   bottom: 10%;
@@ -345,6 +358,17 @@ label {
   .footer-coffee-cup {
     transform-origin: 50% 85%;
     animation: footer-coffee-sway 5s ease-in-out infinite;
+  }
+  .footer-coffee-cup path:nth-child(1),
+  .footer-coffee-cup path:nth-child(2),
+  .footer-coffee-cup path:nth-child(4) {
+    animation: footer-steam-rise 2s ease-out infinite;
+  }
+  .footer-coffee-cup path:nth-child(2) {
+    animation-delay: -0.7s;
+  }
+  .footer-coffee-cup path:nth-child(4) {
+    animation-delay: -1.4s;
   }
   .tuner-marker {
     transition: left 120ms ease-out;
@@ -564,6 +588,16 @@ label {
     transform: rotate(-2deg);
   }
 }
+@keyframes footer-steam-rise {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
 @keyframes coffee-bob {
   0%,
   100% {
@@ -630,6 +664,18 @@ label {
   .app-icon-down {
     animation: app-fall 2.6s ease-in-out infinite;
   }
+  /* The third and fourth Lucide Theater paths are the inner curtain edges. */
+  .app-icon-theater path:nth-child(3),
+  .app-icon-theater path:nth-child(4) {
+    transform-box: view-box;
+    animation: app-curtain 4s ease-in-out infinite;
+  }
+  .app-icon-theater path:nth-child(3) {
+    transform-origin: 2px 2px;
+  }
+  .app-icon-theater path:nth-child(4) {
+    transform-origin: 22px 2px;
+  }
   .app-icon-tick {
     animation: app-tick 2s ease-in-out infinite;
   }
@@ -647,8 +693,19 @@ label {
   .app-card:hover .app-icon-needle,
   .app-card:hover .app-icon-wave,
   .app-card:hover .app-icon-up,
-  .app-card:hover .app-icon-down {
+  .app-card:hover .app-icon-down,
+  .app-card:hover .app-icon-theater path:nth-child(3),
+  .app-card:hover .app-icon-theater path:nth-child(4) {
     animation-duration: 1s;
+  }
+}
+@keyframes app-curtain {
+  0%,
+  100% {
+    transform: scaleX(1);
+  }
+  50% {
+    transform: scaleX(0.6);
   }
 }
 @keyframes app-pendulum {

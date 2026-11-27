@@ -71,7 +71,7 @@ export function BuyMeACoffee() {
       <PopoverTrigger asChild>
         <button
           type="button"
-          className="inline-flex items-center gap-1.5 rounded-sm text-xs text-muted-foreground/80 transition-colors hover:text-coral-foreground focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none"
+          className="inline-flex items-center gap-1.5 rounded-xl border border-dashed border-yellow/35 px-3 py-1.5 text-xs text-muted-foreground/80 transition-colors hover:text-coral-foreground focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none"
         >
           <TreatThePanda iconSize={14} animate />
         </button>

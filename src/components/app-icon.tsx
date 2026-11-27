@@ -62,7 +62,9 @@ const animatedIcons: Record<AppPath, ReactNode> = {
       </g>
     </svg>
   ),
-  "/apps/stage-planner": <Theater className="h-full w-full" strokeWidth={3} aria-hidden="true" />,
+  "/apps/stage-planner": (
+    <Theater className="app-icon-theater h-full w-full" strokeWidth={1.125} aria-hidden="true" />
+  ),
 };
 
 export function AppIcon({ app }: { app: AppPath }) {
