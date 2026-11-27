@@ -1,3 +1,4 @@
+import { runInNewContext } from "node:vm";
 import { App } from "aws-cdk-lib";
 import { Template, Match } from "aws-cdk-lib/assertions";
 import { describe, expect, it } from "vitest";
@@ -39,6 +40,36 @@ describe("serverless deployment", () => {
         ]),
       }),
     });
+    const functions = Object.values(template.findResources("AWS::CloudFront::Function"));
+    expect(functions).toHaveLength(1);
+    const handler: (event: { request: { uri: string } }) => { uri: string } = runInNewContext(
+      `${functions[0].Properties.FunctionCode}; handler`,
+    );
+    for (const uri of [
+      "/",
+      "/g/example",
+      "/g/example.with.dot",
+      "/c/example",
+      "/apps/metronome",
+      "/apps/metronome/",
+      "/new-page",
+      "/future/nested/page",
+      "/section.with.dot/page",
+    ]) {
+      expect(handler({ request: { uri } }).uri).toBe("/_shell.html");
+    }
+    for (const uri of [
+      "/api/groups",
+      "/api",
+      "/assets/app.js",
+      "/assets/missing",
+      "/player/youtube.html",
+      "/player/missing",
+      "/podiumpanda.svg",
+      "/apps/metronome.js",
+    ]) {
+      expect(handler({ request: { uri } }).uri).toBe(uri);
+    }
     template.hasResourceProperties("AWS::CloudFront::ResponseHeadersPolicy", {
       ResponseHeadersPolicyConfig: Match.objectLike({
         SecurityHeadersConfig: Match.objectLike({

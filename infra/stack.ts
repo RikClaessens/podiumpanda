@@ -89,7 +89,12 @@ export class PodiumPandaStack extends Stack {
       code: cloudfront.FunctionCode.fromInline(`
 function handler(event) {
   var request = event.request;
-  if (request.uri === '/' || request.uri.indexOf('/c/') === 0 || request.uri.indexOf('/g/') === 0) {
+  var uri = request.uri;
+  var reserved = uri === '/api' || uri.indexOf('/api/') === 0 ||
+      uri === '/assets' || uri.indexOf('/assets/') === 0 ||
+      uri === '/player' || uri.indexOf('/player/') === 0;
+  if (!reserved && (uri.indexOf('/c/') === 0 || uri.indexOf('/g/') === 0 ||
+      uri.lastIndexOf('.') < uri.lastIndexOf('/'))) {
     request.uri = '/_shell.html';
   }
   return request;

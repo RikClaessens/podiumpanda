@@ -78,7 +78,7 @@ Production serves `https://podiumpanda.com` (the apex only, not `www`). CDK uses
 
    CDK requests and DNS-validates the certificate; no manual certificate is needed. The lookup requires Route 53 read access (the CDK bootstrap lookup role provides it) and is cached in the ignored `cdk.context.json`; run `pnpm cdk context --clear` if the hosted zone changes. Issuance, CloudFront deployment and DNS propagation can take time. The production stack outputs `Url`, `ApiUrl`, and `GitHubRoleArn`. Production data is separate from development; browser-stored shortcuts are also specific to each origin and do not migrate to the new domain.
 
-CDK uses local esbuild, not Docker. S3 and DynamoDB are retained if the stack is deleted. DynamoDB point-in-time recovery is enabled. CloudFront forwards authorization headers only to the uncached backend behavior. SPA rewrites apply only to `/`, `/g/*` and `/c/*`, never to backend failures.
+CDK uses local esbuild, not Docker. S3 and DynamoDB are retained if the stack is deleted. DynamoDB point-in-time recovery is enabled. CloudFront forwards authorization headers only to the uncached backend behavior. The SPA fallback rewrites extensionless paths and existing `/g/*` and `/c/*` routes to the shell; `/api`, `/assets` and `/player` paths and other file requests are not rewritten. New page paths should have no extension in their final segment.
 
 ## GitHub Actions
 
