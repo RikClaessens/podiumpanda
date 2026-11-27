@@ -660,3 +660,28 @@ label {
     transform: translateY(-5px) rotate(6deg);
   }
 }
+
+/* Squircle experiment: smooth superellipse corners everywhere, except true circles and pills. */
+@supports (corner-shape: squircle) {
+  /* A squircle corner looks tighter than a round one, so use larger radii. */
+  :root {
+    --radius-sm: 0.9rem;
+    --radius-md: 1.2rem;
+    --radius-lg: 1.5rem;
+    --radius-xl: 2rem;
+    --radius-2xl: 2.5rem;
+    --radius-3xl: 3rem;
+  }
+  .panel {
+    border-radius: 2rem;
+  }
+  * {
+    corner-shape: squircle;
+  }
+  [class*="rounded-full"],
+  .beat-light,
+  .metronome-pulse,
+  .coffee-steam span {
+    corner-shape: round;
+  }
+}
