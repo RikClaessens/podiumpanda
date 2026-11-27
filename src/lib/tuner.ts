@@ -17,6 +17,8 @@ export function isInstrumentId(value: string | null): value is InstrumentId {
 export const DEFAULT_REFERENCE_HZ = 440;
 export const MIN_REFERENCE_HZ = 400;
 export const MAX_REFERENCE_HZ = 480;
+export const INSTRUMENT_STORAGE_KEY = "podiumpanda.tuner.instrument";
+export const REFERENCE_STORAGE_KEY = "podiumpanda.tuner.reference";
 
 export function parseReferenceHz(value: string | null) {
   const reference = Number(value);

@@ -5,28 +5,27 @@ import {
   DEFAULT_REFERENCE_HZ,
   detectPitch,
   instruments,
+  INSTRUMENT_STORAGE_KEY,
   isInstrumentId,
   MAX_REFERENCE_HZ,
   MIN_REFERENCE_HZ,
   parseReferenceHz,
   pitchReading,
+  REFERENCE_STORAGE_KEY,
   type InstrumentId,
 } from "../lib/tuner";
 import { AppPage } from "./app-page";
 import { Picker } from "./picker";
 import { Button } from "./ui/button";
 
-const storageKey = "podiumpanda.tuner.instrument";
-const referenceStorageKey = "podiumpanda.tuner.reference";
-
 export function Tuner() {
   const { t } = useLanguage();
   const [initial] = useState(() => {
     try {
-      const saved = window.localStorage.getItem(storageKey);
+      const saved = window.localStorage.getItem(INSTRUMENT_STORAGE_KEY);
       return {
         instrument: isInstrumentId(saved) ? saved : "concert",
-        referenceHz: parseReferenceHz(window.localStorage.getItem(referenceStorageKey)),
+        referenceHz: parseReferenceHz(window.localStorage.getItem(REFERENCE_STORAGE_KEY)),
         storageError: false,
       } as const;
     } catch (error) {
@@ -112,7 +111,7 @@ export function Tuner() {
     referenceRef.current = clamped;
     setReferenceHz(clamped);
     setHistory([]);
-    savePreference(referenceStorageKey, String(clamped));
+    savePreference(REFERENCE_STORAGE_KEY, String(clamped));
   }
 
   async function start() {
@@ -348,7 +347,7 @@ export function Tuner() {
             onValueChange={(value) => {
               if (!isInstrumentId(value)) return;
               setInstrument(value);
-              savePreference(storageKey, value);
+              savePreference(INSTRUMENT_STORAGE_KEY, value);
             }}
             options={instruments.map((item) => ({ value: item.id, label: t(item.label) }))}
           />

@@ -1,7 +1,7 @@
-import { AudioLines, Timer, type LucideIcon } from "lucide-react";
+import { AudioLines, Radio, Timer, type LucideIcon } from "lucide-react";
 
 type AppDefinition = {
-  to: "/apps/metronome" | "/apps/tuner";
+  to: "/apps/metronome" | "/apps/tuner" | "/apps/tone-generator";
   name: string;
   iconColor: string;
   icon: LucideIcon;
@@ -19,5 +19,11 @@ export const apps = [
     name: "Tuner",
     iconColor: "text-coral-foreground",
     icon: AudioLines,
+  },
+  {
+    to: "/apps/tone-generator",
+    name: "Tone generator",
+    iconColor: "text-coral-foreground",
+    icon: Radio,
   },
 ] satisfies AppDefinition[];

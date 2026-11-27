@@ -16,6 +16,8 @@ The header's settings menu contains language and theme controls. Concert tabs st
 
 The chromatic tuner listens locally with microphone permission and displays pitch, cents, and a short pitch history. A4 defaults to 440 Hz and can be adjusted from 400 to 480 Hz. The instrument selector shows written notes for transposing instruments; both settings are remembered in browser storage. Stop listening or leave the page to release the microphone. Microphone access requires HTTPS or localhost and a supported browser.
 
+The tone generator starts at the tuner's saved A4 reference and uses its instrument selection to display written notes. Changing the instrument in either app saves it for the other; changing the generator's instrument does not change the sounding frequency. Set a frequency from 20 to 20,000 Hz with the slider and 0.1 Hz buttons, or step between notes, and adjust waveform, volume, and stereo balance. Audio starts only on request and stops when leaving the page. Start at a low volume and avoid prolonged or loud tones.
+
 The homepage links to a dedicated group-creation page. Creating a group opens its workspace and saves a shortcut in the browser when storage is available.
 
 Each group has a shared, changeable icon chosen from music and percussion options. Older groups and shortcuts use the people icon by default. Homepage shortcuts show the icon last seen in that browser and update when the group is opened.

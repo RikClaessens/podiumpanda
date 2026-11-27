@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowDown, ArrowUp, Minus, Pause, Play, Plus, Timer } from "lucide-react";
+import { Minus, Pause, Play, Plus, Timer } from "lucide-react";
 import { useLanguage } from "../lib/language";
 import { AppPage } from "./app-page";
 import {
@@ -155,7 +155,7 @@ export function Metronome() {
               aria-label={t("Decrease tempo")}
               onClick={() => setTempo(bpm - 1)}
             >
-              <ArrowDown size={20} />
+              <Minus size={20} />
             </Button>
             <div className="col-start-2 row-start-2 min-w-0 text-center">
               <div className="flex items-baseline justify-center gap-2">
@@ -188,7 +188,7 @@ export function Metronome() {
               aria-label={t("Increase tempo")}
               onClick={() => setTempo(bpm + 1)}
             >
-              <ArrowUp size={20} />
+              <Plus size={20} />
             </Button>
           </div>
           <input
