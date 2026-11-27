@@ -75,7 +75,7 @@ function HomeContent() {
           {dynamic(error)}
         </p>
       )}
-      <section className="grid items-start gap-6 md:grid-cols-[minmax(0,1fr)_20rem]">
+      <section className="space-y-4">
         <div className="min-w-0 space-y-4">
           <h2 className="section-title">{t("Your groups")}</h2>
           {groups.length === 0 && (
@@ -85,14 +85,14 @@ function HomeContent() {
           )}
           <GroupCards groups={groups} />
         </div>
-        <aside className="space-y-4">
-          <h2 className="section-title">{t("Apps")}</h2>
-          <div className="space-y-3">
-            {apps.map((app) => {
-              return <AppCard key={app.to} app={app} />;
-            })}
-          </div>
-        </aside>
+      </section>
+      <section className="space-y-4">
+        <h2 className="section-title">{t("Apps")}</h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {apps.map((app) => (
+            <AppCard key={app.to} app={app} />
+          ))}
+        </div>
       </section>
       {recent.length > 0 && (
         <section className="space-y-4">

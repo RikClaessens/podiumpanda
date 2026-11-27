@@ -513,3 +513,79 @@ label {
     scroll-behavior: auto !important;
   }
 }
+.app-icon-pendulum {
+  transform-origin: 32px 46px;
+}
+.app-icon-needle {
+  transform-origin: 32px 46px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .app-icon-pendulum {
+    animation: app-pendulum 2.4s ease-in-out infinite alternate;
+  }
+  .app-icon-needle {
+    animation: app-needle 3.2s ease-in-out infinite;
+  }
+  .app-icon-wave {
+    animation: app-wave 3s linear infinite;
+  }
+  .app-icon-up {
+    animation: app-rise 2.6s ease-in-out infinite;
+  }
+  .app-icon-down {
+    animation: app-fall 2.6s ease-in-out infinite;
+  }
+  .app-card:hover .app-icon-pendulum,
+  .app-card:hover .app-icon-needle,
+  .app-card:hover .app-icon-wave,
+  .app-card:hover .app-icon-up,
+  .app-card:hover .app-icon-down {
+    animation-duration: 1s;
+  }
+}
+@keyframes app-pendulum {
+  from {
+    transform: rotate(-22deg);
+  }
+  to {
+    transform: rotate(22deg);
+  }
+}
+@keyframes app-needle {
+  0%,
+  100% {
+    transform: rotate(-28deg);
+  }
+  35% {
+    transform: rotate(14deg);
+  }
+  55% {
+    transform: rotate(-6deg);
+  }
+  75% {
+    transform: rotate(2deg);
+  }
+}
+@keyframes app-wave {
+  to {
+    transform: translateX(48px);
+  }
+}
+@keyframes app-rise {
+  0%,
+  100% {
+    transform: translateY(2px);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+@keyframes app-fall {
+  0%,
+  100% {
+    transform: translateY(-2px);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+}
