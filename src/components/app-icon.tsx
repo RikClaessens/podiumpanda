@@ -65,6 +65,16 @@ const animatedIcons: Record<AppPath, ReactNode> = {
   "/apps/stage-planner": (
     <Theater className="app-icon-theater h-full w-full" strokeWidth={1.125} aria-hidden="true" />
   ),
+  "/apps/wheel-of-fortune": (
+    <svg {...svgProps}>
+      <circle cx="32" cy="33" r="22" />
+      <g className="app-icon-wheel">
+        <path d="M32 11v44M10 33h44M16.5 17.5l31 31M47.5 17.5l-31 31" />
+      </g>
+      <circle cx="32" cy="33" r="4" fill="var(--background)" />
+      <path d="M28 5h8l-4 8z" fill="var(--background)" />
+    </svg>
+  ),
 };
 
 export function AppIcon({ app }: { app: AppPath }) {

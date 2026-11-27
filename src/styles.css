@@ -648,7 +648,30 @@ label {
 .app-icon-needle {
   transform-origin: 32px 46px;
 }
+.app-icon-wheel {
+  transform-origin: 32px 33px;
+}
+.wheel-light {
+  filter: drop-shadow(0 0 2px #fff3ae);
+}
 @media (prefers-reduced-motion: no-preference) {
+  .wheel-light {
+    animation: wheel-light 0.8s ease-in-out infinite alternate;
+  }
+  .wheel-show[data-spinning="true"] .wheel-light {
+    animation-duration: 0.35s;
+  }
+  .wheel-show[data-spinning="true"] .wheel-pointer {
+    transform-box: view-box;
+    transform-origin: 200px 18px;
+    animation: wheel-pointer 0.22s ease-in-out infinite alternate;
+  }
+  .wheel-result {
+    animation: wheel-result 0.55s ease-out both;
+  }
+  .app-icon-wheel {
+    animation: app-wheel 6s linear infinite;
+  }
   .app-icon-pendulum {
     animation: app-pendulum 2.4s ease-in-out infinite alternate;
   }
@@ -695,8 +718,44 @@ label {
   .app-card:hover .app-icon-up,
   .app-card:hover .app-icon-down,
   .app-card:hover .app-icon-theater path:nth-child(3),
-  .app-card:hover .app-icon-theater path:nth-child(4) {
+  .app-card:hover .app-icon-theater path:nth-child(4),
+  .app-card:hover .app-icon-wheel {
     animation-duration: 1s;
+  }
+}
+@keyframes wheel-light {
+  from {
+    opacity: 0.18;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes wheel-pointer {
+  from {
+    transform: rotate(-3deg);
+  }
+  to {
+    transform: rotate(3deg);
+  }
+}
+@keyframes wheel-result {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes app-wheel {
+  to {
+    transform: rotate(360deg);
   }
 }
 @keyframes app-curtain {

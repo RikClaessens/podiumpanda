@@ -23,6 +23,7 @@ Changes are shared with the group, and the latest shared edit can be undone. Any
 - **Tuner:** check a sustained note with your microphone, see how sharp or flat it is, and choose a reference pitch and instrument. Audio stays on your device.
 - **Tone generator:** play a tone, adjust its frequency, waveform, volume and balance, and step between notes. It uses the tuner's saved instrument and reference pitch.
 - **Transposition:** select a note on a marimba-style keyboard and convert it between instruments, with octave labels and concert pitch. Custom intervals support other instruments.
+- **Wheel of fortune:** enter your own options and spin to choose one at random, with an optional click sound. Your entries, sound setting and last result are saved on this device.
 
 Start tones at a low volume and avoid prolonged or loud playback. The tuner requires microphone permission and a supported browser on HTTPS or localhost.
 

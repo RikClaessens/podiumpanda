@@ -5,7 +5,8 @@ type AppDefinition = {
     | "/apps/tone-generator"
     | "/apps/transposition"
     | "/apps/click-track"
-    | "/apps/stage-planner";
+    | "/apps/stage-planner"
+    | "/apps/wheel-of-fortune";
   name: string;
 };
 
@@ -33,5 +34,9 @@ export const apps = [
   {
     to: "/apps/stage-planner",
     name: "Stage planner",
+  },
+  {
+    to: "/apps/wheel-of-fortune",
+    name: "Wheel of fortune",
   },
 ] satisfies AppDefinition[];

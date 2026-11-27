@@ -132,6 +132,27 @@ export const dutch = {
   "Tone generator": "Toongenerator",
   Transposition: "Transponeren",
   "Stage planner": "Podiumplanner",
+  "Wheel of fortune": "Rad van fortuin",
+  "Give the wheel a spin and let it decide.": "Draai aan het rad en laat het beslissen.",
+  "Spin the wheel": "Draai aan het rad",
+  "Spinning…": "Het rad draait…",
+  "And the wheel chooses…": "Het rad kiest…",
+  "The wheel chose: {entry}": "Het rad koos: {entry}",
+  "Wheel entries": "Keuzes op het rad",
+  "Enter one option per line. Each line has an equal chance.":
+    "Zet elke keuze op een eigen regel. Elke regel heeft evenveel kans.",
+  "Add at least one option to spin the wheel.":
+    "Voeg minstens één keuze toe om aan het rad te draaien.",
+  "Your wheel is saved on this device.": "Je rad wordt op dit apparaat opgeslagen.",
+  "Option {number}": "Keuze {number}",
+  "Your saved wheel could not be read.": "Je opgeslagen rad kon niet worden gelezen.",
+  "Your wheel could not be saved on this device.":
+    "Je rad kon niet op dit apparaat worden opgeslagen.",
+  "Mute wheel sound": "Radgeluid dempen",
+  "Unmute wheel sound": "Radgeluid aanzetten",
+  Mute: "Dempen",
+  Unmute: "Geluid aan",
+  "Could not play the wheel sound.": "Het radgeluid kon niet worden afgespeeld.",
   "Concert floorplans": "Podiumplannen voor concerten",
   "Load from concert": "Laden uit concert",
   "Loading adds a copy to your draft without replacing existing floorplans.":
