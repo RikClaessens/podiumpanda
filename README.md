@@ -50,6 +50,15 @@ Build first: TanStack generates the route tree, and CDK needs the static output 
 
 Keep the shared router pending renderer configured: SPA prerendering and hydration must produce the same Suspense structure. Browser-dependent pages use client-only rendering.
 
+### Coffee for the panda
+
+A small "Treat the panda to a ☕" link in the footer of every page opens a popover with preset treats and a "Choose your own amount" option. There is no payment integration: each option opens its own reusable Mollie payment link, configured in `coffeeLinks` in `src/lib/coffee.ts`.
+
+- `espresso`, `coffeeAndCroissant` and `coffeeAndCake`: fixed-amount links. Keep the amounts in `coffeePresets` (cents) in sync with the amounts in Mollie, because they are only shown in the popover.
+- `custom`: a "Customer sets the price" link, where the visitor enters the amount on Mollie's page.
+
+Set the redirect URL of every link to `https://podiumpanda.com/thanks`. Options without a link are hidden in production and show a "not set up yet" message in `pnpm dev`. If no link is set at all, the footer link only shows in `pnpm dev`.
+
 ## Initial AWS deployment
 
 The AWS account must already have the GitHub OIDC provider for `https://token.actions.githubusercontent.com`, with audience `sts.amazonaws.com`. Use the same AWS account for both regions and replace `huskey` with your AWS profile if needed.

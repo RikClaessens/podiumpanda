@@ -77,42 +77,33 @@ function HomeContent() {
       )}
       <section className="grid items-start gap-6 md:grid-cols-[minmax(0,1fr)_20rem]">
         <div className="min-w-0 space-y-4">
-          <h2 className="section-title">{t("Your recent groups")}</h2>
-          {groups.length === 0 ? (
-            <div className="panel space-y-4">
-              <p className="text-muted-foreground">
-                {t("Create a group, or open a group link you received.")}
-              </p>
-              <Button asChild size="sm">
-                <Link to="/g/new">
-                  <Plus size={16} />
-                  {t("Create group")}
-                </Link>
-              </Button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              {groups.map((item) => (
-                <Link
-                  key={item.id}
-                  to="/g/$groupId"
-                  params={{ groupId: item.id }}
-                  hash={`key=${item.key}`}
-                  className="concert-card panel flex min-h-20 min-w-0 items-center gap-4"
-                >
-                  <GroupIcon icon={item.icon} className="shrink-0 text-coral-foreground" />
-                  <h3 className="min-w-0 text-2xl font-semibold break-words">{item.title}</h3>
-                </Link>
-              ))}
-              <Link
-                to="/g/new"
-                className="concert-card flex min-h-20 min-w-0 items-center gap-4 rounded-[1.25rem] border-2 border-dashed border-primary/40 bg-secondary/40 p-5 text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-              >
-                <Plus size={24} className="shrink-0" aria-hidden="true" />
-                <h3 className="text-2xl font-semibold">{t("Create group")}</h3>
-              </Link>
-            </div>
+          <h2 className="section-title">{t("Your groups")}</h2>
+          {groups.length === 0 && (
+            <p className="text-muted-foreground">
+              {t("Create a group, or open a group link you received.")}
+            </p>
           )}
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            {groups.map((item) => (
+              <Link
+                key={item.id}
+                to="/g/$groupId"
+                params={{ groupId: item.id }}
+                hash={`key=${item.key}`}
+                className="concert-card panel flex min-h-20 min-w-0 items-center gap-4"
+              >
+                <GroupIcon icon={item.icon} className="shrink-0 text-coral-foreground" />
+                <h3 className="min-w-0 text-2xl font-semibold break-words">{item.title}</h3>
+              </Link>
+            ))}
+            <Link
+              to="/g/new"
+              className="concert-card flex min-h-20 min-w-0 items-center gap-4 rounded-[1.25rem] border-2 border-dashed border-primary/40 bg-secondary/40 p-5 text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            >
+              <Plus size={24} className="shrink-0" aria-hidden="true" />
+              <h3 className="text-2xl font-semibold">{t("Create group")}</h3>
+            </Link>
+          </div>
         </div>
         <aside className="space-y-4">
           <h2 className="section-title">{t("Apps")}</h2>

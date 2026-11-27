@@ -6,6 +6,7 @@ import { ThemeProvider } from "next-themes";
 import { ThemeToggle } from "../components/theme-toggle";
 import { FloatingPlayerProvider } from "../components/media-player";
 import { AppSwitcher } from "../components/app-switcher";
+import { BuyMeACoffee } from "../components/buy-me-a-coffee";
 import { Button } from "../components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../components/ui/popover";
 import stylesheet from "../styles.css?url";
@@ -131,6 +132,9 @@ function RootContent() {
             <FloatingPlayerProvider>
               <Outlet />
             </FloatingPlayerProvider>
+            <footer className="mx-auto flex max-w-7xl justify-center px-5 pt-8 pb-6">
+              <BuyMeACoffee />
+            </footer>
           </QueryClientProvider>
         </ThemeProvider>
         <Scripts />

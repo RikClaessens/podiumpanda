@@ -37,7 +37,7 @@ export const dutch = {
   "Group name": "Groepsnaam",
   "Your orchestra or ensemble": "Je orkest of ensemble",
   "Create group": "Groep aanmaken",
-  "Your recent groups": "Jouw groepen",
+  "Your groups": "Jouw groepen",
   "← Back to home": "← Terug naar de startpagina",
   "Create a group, or open a group link you received.":
     "Maak een groep aan of open een ontvangen groepslink.",
@@ -388,6 +388,34 @@ export const dutch = {
   "Reordered setlist": "Setlist opnieuw geordend",
   "Updated concert details": "Concertgegevens bijgewerkt",
   "Undid revision {revision}": "Versie {revision} ongedaan gemaakt",
+  "Treat the panda to a coffee": "Trakteer de panda op een koffie",
+  "Treat the panda to a": "Trakteer de panda op een",
+  "Conducting all day is thirsty work. A coffee makes the panda very happy.":
+    "De hele dag dirigeren is dorstig werk. Van een koffie wordt de panda heel blij.",
+  Espresso: "Espresso",
+  "Coffee and croissant": "Koffie met croissant",
+  "Coffee and cake": "Koffie met taart",
+  "Quick pick-me-up": "Snelle oppepper",
+  "Crumbs included": "Inclusief kruimels",
+  "Pure panda bliss": "Puur pandageluk",
+  "The panda is wide awake and conducting at double tempo!":
+    "De panda is klaarwakker en dirigeert op dubbel tempo!",
+  "The panda is covered in crumbs and could not be happier.":
+    "De panda zit onder de kruimels en kan niet gelukkiger zijn.",
+  "Cake too?! The panda is doing a happy dance on the podium.":
+    "Ook taart?! De panda doet een vreugdedansje op het podium.",
+  "The panda is speechless. Thank you so much!": "De panda is sprakeloos. Heel erg bedankt!",
+  "Choose your own amount": "Kies je eigen bedrag",
+  "Payments are handled securely by Mollie.": "Betalingen worden veilig afgehandeld door Mollie.",
+  "The coffee payment link is not set up yet.": "De betaallink voor koffie is nog niet ingesteld.",
+  "Order up!": "Bestelling is klaar!",
+  "Thank you!": "Dankjewel!",
+  "The panda is buzzing.": "De panda zoemt van energie.",
+  "Your coffee just arrived on the podium. The panda took one sip and is now conducting at double tempo.":
+    "Je koffie is net op het podium aangekomen. De panda nam één slok en dirigeert nu op dubbel tempo.",
+  "Thanks for keeping PodiumPanda free for every group and orchestra.":
+    "Bedankt dat je PodiumPanda gratis houdt voor elke groep en elk orkest.",
+  "Back to the music": "Terug naar de muziek",
 } satisfies Record<string, string>;
 
 const translations = new Map<string, string>(Object.entries(dutch));
