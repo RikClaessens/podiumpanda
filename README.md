@@ -18,6 +18,8 @@ The chromatic tuner listens locally with microphone permission and displays pitc
 
 The tone generator starts at the tuner's saved A4 reference and uses its instrument selection to display written notes. Changing the instrument in either app saves it for the other; changing the generator's instrument does not change the sounding frequency. Set a frequency from 20 to 20,000 Hz with the slider and 0.1 Hz buttons, or step between notes, and adjust waveform, volume, and stereo balance. Audio starts only on request and stops when leaving the page. Start at a low volume and avoid prolonged or loud tones.
 
+The transposition app converts a single written note between the instruments in its selectors. Other instruments can be specified by the number of semitones their written pitch is above concert pitch (negative for below). Select an octave and a marimba-style bar; the result includes octave numbers and, when neither instrument is concert pitch, the sounding concert note. Accidentals show enharmonic equivalents rather than choosing a spelling from a key signature. Concert pitch covers non-transposing instruments such as piano, flute, oboe, trombone and tuba.
+
 The homepage links to a dedicated group-creation page. Creating a group opens its workspace and saves a shortcut in the browser when storage is available.
 
 Each group has a shared, changeable icon chosen from music and percussion options. Older groups and shortcuts use the people icon by default. Homepage shortcuts show the icon last seen in that browser and update when the group is opened.

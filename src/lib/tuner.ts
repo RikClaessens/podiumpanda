@@ -6,6 +6,10 @@ export const instruments = [
   { id: "eb-baritone", label: "E♭ baritone saxophone", semitones: 21 },
   { id: "f-horn", label: "F horn / English horn", semitones: 7 },
   { id: "eb-clarinet", label: "E♭ clarinet", semitones: -3 },
+  { id: "a-clarinet", label: "A clarinet", semitones: 3 },
+  { id: "piccolo", label: "Piccolo / soprano recorder", semitones: -12 },
+  { id: "glockenspiel", label: "Glockenspiel", semitones: -24 },
+  { id: "guitar", label: "Guitar / double bass", semitones: 12 },
 ] as const;
 
 export type InstrumentId = (typeof instruments)[number]["id"];
