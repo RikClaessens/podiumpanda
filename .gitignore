@@ -3,6 +3,7 @@ dist/
 .output/
 .tanstack/
 cdk.out/
+cdk.context.json
 .env*
 !.env.example
 *.tsbuildinfo

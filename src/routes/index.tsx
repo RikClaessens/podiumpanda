@@ -75,7 +75,7 @@ function HomeContent() {
           {dynamic(error)}
         </p>
       )}
-      <section className="grid items-start gap-6 md:grid-cols-[minmax(0,1fr)_18rem]">
+      <section className="grid items-start gap-6 md:grid-cols-[minmax(0,1fr)_20rem]">
         <div className="min-w-0 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 className="section-title">{t("Your recent groups")}</h2>
@@ -107,19 +107,13 @@ function HomeContent() {
             </div>
           )}
         </div>
-        <aside className="apps-panel panel space-y-4">
-          <div>
-            <p className="eyebrow">{t("A little more music")}</p>
-            <h2 className="section-title mt-1">{t("Apps")}</h2>
-          </div>
+        <aside className="space-y-4">
+          <h2 className="section-title">{t("Apps")}</h2>
           <div className="space-y-3">
             {apps.map((app) => {
-              return <AppCard key={app.to} app={app} showDescription />;
+              return <AppCard key={app.to} app={app} variant="homepage" />;
             })}
           </div>
-          <p className="text-xs leading-relaxed text-muted-foreground">
-            {t("More music tools are on the way.")}
-          </p>
         </aside>
       </section>
       {recent.length > 0 && (

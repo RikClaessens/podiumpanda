@@ -4,7 +4,7 @@ A shared-link group workspace for an orchestra or other ensemble. Groups have a 
 
 ## Stack
 
-TypeScript, TanStack Start (SPA mode), TanStack Query, shadcn/ui, Tailwind, React Konva, Zod, pnpm, Oxlint, Oxfmt, and Vitest. AWS CDK provisions private S3 hosting behind CloudFront, API Gateway HTTP endpoints, Node.js Lambda, and a DynamoDB single table. Regional resources use `eu-west-1`. No containers or custom domain are needed.
+TypeScript, TanStack Start (SPA mode), TanStack Query, shadcn/ui, Tailwind, React Konva, Zod, pnpm, Oxlint, Oxfmt, and Vitest. AWS CDK provisions private S3 hosting behind CloudFront, API Gateway HTTP endpoints, Node.js Lambda, and a DynamoDB single table. Application resources use `eu-west-1`; the production CloudFront certificate uses `us-east-1`. No containers are needed.
 
 The supplied panda SVG is the app icon and header mark; the full panda PNG appears on the homepage. Baloo 2 headings and Montserrat body text are self-hosted through Fontsource (no external font requests). Light mode uses a cool near-white lavender background and white cards, with dark-purple primary actions, lilac selected tabs and coral accents. Dark mode retains the purple palette with lilac and coral highlights. The theme initially follows the device preference; the header toggle remembers an explicit choice in browser storage.
 
@@ -52,14 +52,31 @@ Keep the shared router pending renderer configured: SPA prerendering and hydrati
 
 ## Initial AWS deployment
 
-The account must already have the GitHub OIDC provider for `https://token.actions.githubusercontent.com`, with audience `sts.amazonaws.com`.
+The AWS account must already have the GitHub OIDC provider for `https://token.actions.githubusercontent.com`, with audience `sts.amazonaws.com`. Use the same AWS account for both regions and replace `huskey` with your AWS profile if needed.
 
 ```sh
+pnpm build
 pnpm cdk bootstrap --profile huskey aws://YOUR_ACCOUNT_ID/eu-west-1
-pnpm deploy --profile huskey --context stage=dev
+pnpm run deploy --profile huskey --context stage=dev
 ```
 
-The stack outputs `Url`, `ApiUrl`, and `GitHubRoleArn`. Use the CloudFront `Url` for now; its default HTTPS certificate is managed by AWS. No Route 53 records or custom ACM certificate are created yet. When adding `podiumpanda.com`, provision its CloudFront ACM certificate in `us-east-1`, validate it through Route 53, and add the domain to the distribution.
+The development stack outputs `Url`, `ApiUrl`, and `GitHubRoleArn`. Development continues to use its CloudFront URL and separate data.
+
+### Production domain
+
+Production serves `https://podiumpanda.com` (the apex only, not `www`). CDK uses an existing public Route 53 hosted zone in the same AWS account, creates an ACM certificate in `us-east-1` with DNS validation, and adds IPv4/IPv6 aliases to the production CloudFront distribution. Other AWS resources incur charges.
+
+1. Make sure exactly one public hosted zone named `podiumpanda.com` exists in the account and is authoritative for the domain. CDK looks it up by name; the certificate cannot validate until public DNS delegates to it. Existing apex A or AAAA records must be migrated before CDK can create its aliases; plan any DNS cutover to avoid disrupting existing services. Other records are not managed by this stack.
+2. Bootstrap the same account in both regions if needed, then deploy production once locally:
+
+   ```sh
+   pnpm build
+   pnpm cdk bootstrap --profile huskey aws://YOUR_ACCOUNT_ID/eu-west-1
+   pnpm cdk bootstrap --profile huskey aws://YOUR_ACCOUNT_ID/us-east-1
+   pnpm run deploy --profile huskey --context stage=prod
+   ```
+
+   CDK requests and DNS-validates the certificate; no manual certificate is needed. The lookup requires Route 53 read access (the CDK bootstrap lookup role provides it) and is cached in the ignored `cdk.context.json`; run `pnpm cdk context --clear` if the hosted zone changes. Issuance, CloudFront deployment and DNS propagation can take time. The production stack outputs `Url`, `ApiUrl`, and `GitHubRoleArn`. Production data is separate from development; browser-stored shortcuts are also specific to each origin and do not migrate to the new domain.
 
 CDK uses local esbuild, not Docker. S3 and DynamoDB are retained if the stack is deleted. DynamoDB point-in-time recovery is enabled. CloudFront forwards authorization headers only to the uncached backend behavior. SPA rewrites apply only to `/`, `/g/*` and `/c/*`, never to backend failures.
 
@@ -69,7 +86,11 @@ Repository: https://github.com/RikClaessens/podiumpanda
 
 Create a GitHub environment named `dev`, and set its variable `AWS_DEPLOY_ROLE_ARN` to the `GitHubRoleArn` output. Restrict that environment to `main`. Pushes to `main` run build, typecheck, lint, formatting, and Vitest before deploying with AWS OIDC. Pull requests run verification only.
 
-For production, deploy once locally with `--context stage=prod`, then create a protected `prod` GitHub environment with its own role ARN. Dispatch the workflow with `stage=prod`. Require approval and limit eligible branches for production. Deployment access can assume the CDK bootstrap roles and therefore has infrastructure-management authority; it is not an application-user identity.
+After the initial production deployment above, create a protected `prod` GitHub environment and set its `AWS_DEPLOY_ROLE_ARN` variable to the production stack's `GitHubRoleArn`. Configure environment approval and restrict eligible branches to `main`. Manually dispatch the workflow from `main` with `stage=prod`; pushes to `main` deploy only development, and pull requests never deploy.
+
+Before deploying, the workflow uses the same GitHub deployment role to assume the existing CDK bootstrap deployment role in each required region: `eu-west-1` for dev, and both `eu-west-1` and `us-east-1` for prod. Both regions must be bootstrapped initially as described above; the bootstrap deployment roles cannot create themselves. The workflow runs `cdk bootstrap` with the corresponding CloudFormation execution role and `--previous-parameters`, preserving existing permissions-boundary and public-access-block settings explicitly.
+
+Bootstrapping can update the shared `CDKToolkit` stacks and affect other applications; in particular, the default bootstrap template can overwrite a customized one. An update can also assign the CDK CloudFormation execution role to a toolkit stack, allowing other principals with stack-update access to use that role. Review the existing configuration and adapt the bootstrap command if necessary before enabling this workflow. The GitHub deployment roles trust only their matching environment and have infrastructure-management authority through the bootstrap roles, not application-user access.
 
 ## Shared links and browser storage
 

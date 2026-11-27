@@ -14,7 +14,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: podiumpanda-${{ github.workflow }}-${{ github.ref }}-${{ inputs.stage || 'dev' }}
+  group: podiumpanda-${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || 'deploy' }}
   cancel-in-progress: false
 
 jobs:
@@ -31,7 +31,7 @@ jobs:
       - run: pnpm build
       - run: pnpm check
   deploy:
-    if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     needs: check
     runs-on: ubuntu-latest
     environment: ${{ inputs.stage || 'dev' }}
@@ -46,8 +46,44 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - uses: aws-actions/configure-aws-credentials@v4
+      - name: Configure deployment credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
           aws-region: eu-west-1
-      - run: pnpm deploy --context stage=${{ inputs.stage || 'dev' }}
+      - name: Bootstrap CDK regions
+        env:
+          STAGE: ${{ inputs.stage || 'dev' }}
+        shell: bash
+        run: |
+          account="$(aws sts get-caller-identity --query Account --output text)"
+          [[ "$account" =~ ^[0-9]{12}$ ]] || { echo "Invalid AWS account ID" >&2; exit 1; }
+          regions=(eu-west-1)
+          if [[ "$STAGE" == prod ]]; then regions+=(us-east-1); fi
+          for region in "${regions[@]}"; do (
+            credentials="$(aws sts assume-role --role-arn "arn:aws:iam::$account:role/cdk-hnb659fds-deploy-role-$account-$region" --role-session-name GitHubActionsBootstrap --output json)"
+            AWS_ACCESS_KEY_ID="$(jq -er '.Credentials.AccessKeyId | strings | select(length > 0)' <<< "$credentials")"
+            AWS_SECRET_ACCESS_KEY="$(jq -er '.Credentials.SecretAccessKey | strings | select(length > 0)' <<< "$credentials")"
+            AWS_SESSION_TOKEN="$(jq -er '.Credentials.SessionToken | strings | select(length > 0)' <<< "$credentials")"
+            export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
+            echo "::add-mask::$AWS_ACCESS_KEY_ID"
+            echo "::add-mask::$AWS_SECRET_ACCESS_KEY"
+            echo "::add-mask::$AWS_SESSION_TOKEN"
+            options=(--previous-parameters)
+            stack="$(aws cloudformation list-stacks --region "$region" --query "StackSummaries[?StackName=='CDKToolkit' && StackStatus!='DELETE_COMPLETE'].StackName | [0]" --output text)"
+            if [[ "$stack" == CDKToolkit ]]; then
+              boundary="$(aws cloudformation describe-stacks --region "$region" --stack-name CDKToolkit --query "Stacks[0].Parameters[?ParameterKey=='InputPermissionsBoundary'].ParameterValue | [0]" --output text)"
+              public_access_block="$(aws cloudformation describe-stacks --region "$region" --stack-name CDKToolkit --query "Stacks[0].Parameters[?ParameterKey=='PublicAccessBlockConfiguration'].ParameterValue | [0]" --output text)"
+              if [[ -n "$boundary" && "$boundary" != None ]]; then
+                options+=(--custom-permissions-boundary "$boundary")
+              fi
+              if [[ "$public_access_block" == false ]]; then
+                options+=(--no-public-access-block-configuration)
+              fi
+            fi
+            pnpm cdk bootstrap "aws://$account/$region" --role-arn "arn:aws:iam::$account:role/cdk-hnb659fds-cfn-exec-role-$account-$region" "${options[@]}"
+          ); done
+      - name: Deploy
+        env:
+          STAGE: ${{ inputs.stage || 'dev' }}
+        run: pnpm run deploy --context "stage=$STAGE"

@@ -13,10 +13,24 @@ import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import * as logs from "aws-cdk-lib/aws-logs";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as deployment from "aws-cdk-lib/aws-s3-deployment";
+import * as acm from "aws-cdk-lib/aws-certificatemanager";
+import * as route53 from "aws-cdk-lib/aws-route53";
+import * as targets from "aws-cdk-lib/aws-route53-targets";
+import { productionDomain } from "./domain.ts";
 
 export class PodiumPandaStack extends Stack {
-  constructor(scope: Construct, id: string, props: StackProps & { stage: "dev" | "prod" }) {
+  constructor(
+    scope: Construct,
+    id: string,
+    props: StackProps & {
+      stage: "dev" | "prod";
+      domain?: { hostedZoneId: string; certificate: acm.ICertificate };
+    },
+  ) {
     super(scope, id, props);
+    if ((props.stage === "prod") !== !!props.domain) {
+      throw new Error("The production stage requires a domain; development must not use it.");
+    }
     const table = new dynamodb.Table(this, "Concerts", {
       partitionKey: { name: "PK", type: dynamodb.AttributeType.STRING },
       sortKey: { name: "SK", type: dynamodb.AttributeType.STRING },
@@ -127,6 +141,8 @@ function handler(event) {
     });
     const frontendOrigin = origins.S3BucketOrigin.withOriginAccessControl(bucket);
     const distribution = new cloudfront.Distribution(this, "Cdn", {
+      domainNames: props.domain ? [productionDomain] : undefined,
+      certificate: props.domain?.certificate,
       defaultBehavior: {
         origin: frontendOrigin,
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
@@ -154,6 +170,15 @@ function handler(event) {
       },
       priceClass: cloudfront.PriceClass.PRICE_CLASS_100,
     });
+    if (props.domain) {
+      const zone = route53.HostedZone.fromHostedZoneAttributes(this, "DomainZone", {
+        hostedZoneId: props.domain.hostedZoneId,
+        zoneName: productionDomain,
+      });
+      const target = route53.RecordTarget.fromAlias(new targets.CloudFrontTarget(distribution));
+      new route53.ARecord(this, "DomainA", { zone, target });
+      new route53.AaaaRecord(this, "DomainAaaa", { zone, target });
+    }
     const frontendPath = resolve("dist/client");
     if (!existsSync(resolve(frontendPath, "_shell.html"))) {
       throw new Error("Run pnpm build before synthesizing or deploying infrastructure.");
@@ -184,19 +209,28 @@ function handler(event) {
       new iam.PolicyStatement({
         actions: ["sts:AssumeRole"],
         resources: [
-          `arn:aws:iam::${this.account}:role/cdk-hnb659fds-deploy-role-${this.account}-${this.region}`,
-          `arn:aws:iam::${this.account}:role/cdk-hnb659fds-file-publishing-role-${this.account}-${this.region}`,
-          `arn:aws:iam::${this.account}:role/cdk-hnb659fds-lookup-role-${this.account}-${this.region}`,
+          ...[this.region, ...(props.stage === "prod" ? ["us-east-1"] : [])].flatMap((region) =>
+            ["deploy", "file-publishing", "lookup"].map(
+              (role) =>
+                `arn:aws:iam::${this.account}:role/cdk-hnb659fds-${role}-role-${this.account}-${region}`,
+            ),
+          ),
         ],
       }),
     );
     deployRole.addToPolicy(
       new iam.PolicyStatement({
         actions: ["cloudformation:DescribeStacks"],
-        resources: [`arn:aws:cloudformation:${this.region}:${this.account}:stack/CDKToolkit/*`],
+        resources: [this.region, ...(props.stage === "prod" ? ["us-east-1"] : [])].map(
+          (region) => `arn:aws:cloudformation:${region}:${this.account}:stack/CDKToolkit/*`,
+        ),
       }),
     );
-    new CfnOutput(this, "Url", { value: `https://${distribution.distributionDomainName}` });
+    new CfnOutput(this, "Url", {
+      value: props.domain
+        ? `https://${productionDomain}`
+        : `https://${distribution.distributionDomainName}`,
+    });
     new CfnOutput(this, "ApiUrl", { value: api.apiEndpoint });
     new CfnOutput(this, "GitHubRoleArn", { value: deployRole.roleArn });
   }
