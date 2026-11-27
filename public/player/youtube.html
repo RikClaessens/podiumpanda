@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>YouTube music player</title>
+    <style>
+      html,
+      body,
+      iframe {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        border: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <iframe
+      title="YouTube music player"
+      referrerpolicy="origin"
+      allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+    <script>
+      const videoId = location.hash.slice(1);
+      if (/^[A-Za-z0-9_-]{11}$/.test(videoId)) {
+        document.querySelector("iframe").src = `https://www.youtube-nocookie.com/embed/${videoId}`;
+      } else {
+        document.body.textContent = "Invalid YouTube video.";
+      }
+    </script>
+  </body>
+</html>

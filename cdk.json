@@ -1,0 +1,4 @@
+{
+  "app": "node infra/app.ts",
+  "context": { "stage": "dev" }
+}

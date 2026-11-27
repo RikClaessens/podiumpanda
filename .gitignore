@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.output/
+.tanstack/
+cdk.out/
+.env*
+!.env.example
+*.tsbuildinfo
+src/routeTree.gen.ts

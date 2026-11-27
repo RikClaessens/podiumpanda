@@ -1,0 +1,356 @@
+@import "@fontsource-variable/baloo-2";
+@import "@fontsource-variable/montserrat";
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: "Montserrat Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Baloo 2 Variable", ui-rounded, sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--foreground);
+  --color-popover: var(--card);
+  --color-popover-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--border);
+  --color-ring: var(--primary);
+  --color-lavender: #8f63d9;
+  --color-lilac: #c9a6ff;
+  --color-cream: #fff5e1;
+  --color-coral: #ff6b68;
+  --color-coral-foreground: var(--coral-foreground);
+  --color-yellow: #f7c94b;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.65rem;
+  --radius-lg: 0.85rem;
+  --radius-xl: 1.25rem;
+}
+
+:root {
+  color-scheme: light;
+  --background: #f8f7fc;
+  --foreground: #301348;
+  --card: #ffffff;
+  --primary: #4b1d8b;
+  --primary-foreground: #fff5e1;
+  --secondary: #eee1ff;
+  --muted: #f3eaf9;
+  --muted-foreground: #6b547b;
+  --accent: #e9d7ff;
+  --destructive: #b42b39;
+  --border: #e3d5ea;
+  --hero: #efe0ff;
+  --coral-foreground: #a3303a;
+}
+
+.dark {
+  color-scheme: dark;
+  --background: #160d24;
+  --foreground: #fff5e1;
+  --card: #241535;
+  --primary: #c9a6ff;
+  --primary-foreground: #231035;
+  --secondary: #38254c;
+  --muted: #30203f;
+  --muted-foreground: #c4afcf;
+  --accent: #422b5c;
+  --destructive: #ff8b88;
+  --border: #493258;
+  --hero: #302044;
+  --coral-foreground: #ff9a94;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+}
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+h1,
+h2,
+h3,
+.brand-title {
+  font-family: var(--font-heading);
+}
+button,
+select {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  padding: 1.25rem;
+}
+.dark .piece-card {
+  background: var(--secondary);
+  border-color: #604775;
+}
+.hero-panel {
+  background: var(--hero);
+  border: 1px solid var(--border);
+  border-radius: 1.75rem;
+  padding: 1.75rem;
+}
+.field {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.4rem;
+}
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+.section-title::before {
+  content: "";
+  display: inline-block;
+  width: 0.25rem;
+  height: 0.85em;
+  margin-right: 0.5rem;
+  border-radius: 9999px;
+  background: var(--color-coral);
+}
+.eyebrow {
+  font-size: 0.7rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--coral-foreground);
+}
+::selection {
+  background: #c9a6ff;
+  color: #301348;
+}
+
+.panda-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 176px;
+  height: 140px;
+}
+.panda-stage::before {
+  content: "";
+  position: absolute;
+  inset: 12px 20px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.panda-conductor {
+  position: relative;
+  width: 112px;
+  height: 125px;
+  object-fit: contain;
+  transform-origin: 50% 90%;
+}
+.loading-note {
+  position: absolute;
+  z-index: 1;
+  color: var(--primary);
+}
+.loading-note-left {
+  top: 36px;
+  left: 7px;
+}
+.loading-note-right {
+  top: 20px;
+  right: 9px;
+  color: var(--coral-foreground);
+}
+.panda-hero .loading-note-left {
+  top: 25%;
+  left: 3%;
+}
+.panda-hero .loading-note-right {
+  top: 12%;
+  right: 3%;
+}
+.menu-icon {
+  position: relative;
+  width: 18px;
+  height: 16px;
+}
+.menu-icon span {
+  position: absolute;
+  left: 0;
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+}
+.menu-icon span:nth-child(1) {
+  top: 2px;
+}
+.menu-icon span:nth-child(2) {
+  top: 7px;
+}
+.menu-icon span:nth-child(3) {
+  top: 12px;
+}
+.settings-trigger[data-state="open"] .menu-icon span:nth-child(1) {
+  transform: translateY(5px) rotate(45deg);
+}
+.settings-trigger[data-state="open"] .menu-icon span:nth-child(2) {
+  opacity: 0;
+}
+.settings-trigger[data-state="open"] .menu-icon span:nth-child(3) {
+  transform: translateY(-5px) rotate(-45deg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .menu-icon span {
+    transition:
+      transform 200ms ease,
+      opacity 150ms ease;
+  }
+  .page-enter,
+  .panda-loading,
+  [data-slot="tabs-content"][data-state="active"],
+  .piece-enter {
+    animation: harmony-enter 220ms ease-out both;
+  }
+  .panda-loading {
+    animation-duration: 160ms;
+  }
+  .concert-card {
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease,
+      border-color 180ms ease;
+  }
+  .concert-card:hover,
+  .concert-card:focus-within {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px color-mix(in srgb, var(--primary) 12%, transparent);
+    border-color: var(--primary);
+  }
+  [data-slot="button"] {
+    transition:
+      transform 140ms ease,
+      background-color 140ms ease,
+      box-shadow 140ms ease;
+  }
+  [data-slot="button"]:active:not(:disabled):not([aria-disabled="true"]) {
+    transform: scale(0.97);
+  }
+  .button-arrow {
+    transition: transform 160ms ease;
+  }
+  [data-slot="button"]:hover .button-arrow {
+    transform: translateX(3px);
+  }
+  .panda-illustration {
+    transform-origin: 50% 90%;
+    animation: panda-conduct 3000ms ease-in-out infinite;
+  }
+  .panda-illustration:hover {
+    animation: panda-wave 650ms ease-in-out;
+  }
+  .brand-title:hover img {
+    transform: rotate(-6deg);
+  }
+  .brand-title img {
+    transition: transform 180ms ease;
+  }
+  .success-pop,
+  [data-slot="checkbox-indicator"] {
+    animation: success-pop 240ms ease-out;
+  }
+  .panda-conductor {
+    animation: panda-conduct 1600ms ease-in-out infinite;
+  }
+  .loading-note {
+    animation: music-float 1800ms ease-in-out infinite;
+  }
+  .loading-note-right {
+    animation-delay: -900ms;
+  }
+}
+
+@keyframes harmony-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes panda-wave {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  25% {
+    transform: rotate(-4deg);
+  }
+  65% {
+    transform: rotate(3deg);
+  }
+}
+@keyframes success-pop {
+  0% {
+    transform: scale(0.75);
+  }
+  60% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes panda-conduct {
+  0%,
+  100% {
+    transform: rotate(-3deg) translateY(0);
+  }
+  50% {
+    transform: rotate(3deg) translateY(-3px);
+  }
+}
+@keyframes music-float {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: translateY(3px) rotate(-8deg);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-7px) rotate(8deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "ignorePatterns": [
+    "src/routeTree.gen.ts",
+    "dist/**",
+    "cdk.out/**",
+    ".output/**",
+    ".tanstack/**",
+    "pnpm-lock.yaml"
+  ]
+}
