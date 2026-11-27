@@ -142,6 +142,27 @@ label {
   letter-spacing: 0.12em;
   color: var(--coral-foreground);
 }
+.beat-light {
+  flex-shrink: 0;
+  width: 0.75rem;
+  height: 0.75rem;
+  border: 2px solid var(--border);
+  border-radius: 9999px;
+  background: var(--card);
+  transition:
+    transform 100ms ease,
+    background-color 100ms ease,
+    box-shadow 100ms ease;
+}
+.beat-light-accent {
+  border-color: var(--color-coral);
+}
+.beat-light-active {
+  transform: scale(1.25);
+  border-color: var(--color-coral);
+  background: var(--color-coral);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-coral) 18%, transparent);
+}
 ::selection {
   background: #c9a6ff;
   color: #301348;

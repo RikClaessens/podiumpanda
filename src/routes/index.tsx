@@ -5,6 +5,8 @@ import { CalendarDays, LayoutDashboard, ListMusic, Music2, Plus, Users, X } from
 import { Button } from "../components/ui/button";
 import { GroupIcon } from "../components/group-icon";
 import { forget, recents, recentGroups, type Recent } from "../lib/local";
+import { apps } from "../lib/apps";
+import { AppCard } from "../components/app-card";
 export const Route = createFileRoute("/")({ component: Home, ssr: false });
 function Home() {
   return <HomeContent />;
@@ -73,36 +75,52 @@ function HomeContent() {
           {dynamic(error)}
         </p>
       )}
-      <section className="space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="section-title">{t("Your recent groups")}</h2>
-          <Button asChild size="sm" className="ml-auto">
-            <Link to="/g/new">
-              <Plus size={16} />
-              {t("Create group")}
-            </Link>
-          </Button>
-        </div>
-        {groups.length === 0 ? (
-          <div className="panel text-muted-foreground">
-            {t("Create a group, or open a group link you received.")}
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            {groups.map((item) => (
-              <Link
-                key={item.id}
-                to="/g/$groupId"
-                params={{ groupId: item.id }}
-                hash={`key=${item.key}`}
-                className="concert-card panel block min-w-0 space-y-3"
-              >
-                <GroupIcon icon={item.icon} className="text-coral-foreground" />
-                <h3 className="text-2xl font-semibold break-words">{item.title}</h3>
+      <section className="grid items-start gap-6 md:grid-cols-[minmax(0,1fr)_18rem]">
+        <div className="min-w-0 space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h2 className="section-title">{t("Your recent groups")}</h2>
+            <Button asChild size="sm" className="ml-auto">
+              <Link to="/g/new">
+                <Plus size={16} />
+                {t("Create group")}
               </Link>
-            ))}
+            </Button>
           </div>
-        )}
+          {groups.length === 0 ? (
+            <div className="panel text-muted-foreground">
+              {t("Create a group, or open a group link you received.")}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              {groups.map((item) => (
+                <Link
+                  key={item.id}
+                  to="/g/$groupId"
+                  params={{ groupId: item.id }}
+                  hash={`key=${item.key}`}
+                  className="concert-card panel block min-w-0 space-y-3"
+                >
+                  <GroupIcon icon={item.icon} className="text-coral-foreground" />
+                  <h3 className="text-2xl font-semibold break-words">{item.title}</h3>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+        <aside className="apps-panel panel space-y-4">
+          <div>
+            <p className="eyebrow">{t("A little more music")}</p>
+            <h2 className="section-title mt-1">{t("Apps")}</h2>
+          </div>
+          <div className="space-y-3">
+            {apps.map((app) => {
+              return <AppCard key={app.to} app={app} showDescription />;
+            })}
+          </div>
+          <p className="text-xs leading-relaxed text-muted-foreground">
+            {t("More music tools are on the way.")}
+          </p>
+        </aside>
       </section>
       {recent.length > 0 && (
         <section className="space-y-4">

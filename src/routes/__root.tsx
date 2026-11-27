@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import { ThemeToggle } from "../components/theme-toggle";
 import { FloatingPlayerProvider } from "../components/media-player";
+import { AppSwitcher } from "../components/app-switcher";
 import { Button } from "../components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../components/ui/popover";
 import stylesheet from "../styles.css?url";
@@ -91,9 +92,7 @@ function RootContent() {
                   PodiumPanda
                 </Link>
                 <div className="flex items-center gap-3">
-                  <span className="hidden text-xs text-muted-foreground sm:inline">
-                    {t("Less organising. More music.")}
-                  </span>
+                  <AppSwitcher />
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
