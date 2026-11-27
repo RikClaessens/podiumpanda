@@ -58,13 +58,25 @@ const canvasPalettes = {
   },
 };
 type CanvasPalette = typeof canvasPalettes.light;
-export default function Floorplans({ snapshot, busy, onEdit }: EditorProps) {
+export default function Floorplans({
+  snapshot,
+  busy,
+  onEdit,
+  onPlanChange,
+  selectedPlanId,
+}: EditorProps & {
+  onPlanChange?: (id: string | null) => void;
+  selectedPlanId?: string | null;
+}) {
   const { t } = useLanguage();
   const { resolvedTheme } = useTheme();
   const colors = resolvedTheme === "dark" ? canvasPalettes.dark : canvasPalettes.light;
   const plans = ofKind(snapshot, "floorplan");
   const [chosen, setChosen] = useState<string | null>(snapshot.concert.defaultFloorplanId);
-  const planId = plans.some((plan) => plan.id === chosen) ? chosen : (plans[0]?.id ?? null);
+  const activeChoice = selectedPlanId === undefined ? chosen : selectedPlanId;
+  const planId = plans.some((plan) => plan.id === activeChoice)
+    ? activeChoice
+    : (plans[0]?.id ?? null);
   const plan = plans.find((item) => item.id === planId);
   const objects = ofKind(snapshot, "object").filter((item) => item.floorplanId === planId);
   const [name, setName] = useState("");
@@ -72,6 +84,7 @@ export default function Floorplans({ snapshot, busy, onEdit }: EditorProps) {
   const [showGrid, setShowGrid] = useState(true);
   const [adding, setAdding] = useState(false);
   const [rename, setRename] = useState<{
+    planId: string;
     value: string;
     revision: number;
   } | null>(null);
@@ -107,6 +120,7 @@ export default function Floorplans({ snapshot, busy, onEdit }: EditorProps) {
     return () => observer.disconnect();
   }, []);
   const selected = objects.find((item) => item.id === selection);
+  const activeRename = rename?.planId === planId ? rename : null;
   const playerNames = new Map(ofKind(snapshot, "player").map((player) => [player.id, player.name]));
   async function addObject(type: StageObject["type"]) {
     if (!planId) return;
@@ -151,6 +165,7 @@ export default function Floorplans({ snapshot, busy, onEdit }: EditorProps) {
               setChosen(value);
               setSelection(null);
               setRename(null);
+              onPlanChange?.(value || null);
             }}
             options={
               plans.length
@@ -185,6 +200,7 @@ export default function Floorplans({ snapshot, busy, onEdit }: EditorProps) {
               const id = crypto.randomUUID();
               if (await onEdit({ type: "put", entity: { kind: "floorplan", id, name } })) {
                 setChosen(id);
+                onPlanChange?.(id);
                 setName("");
                 setRename(null);
                 setAdding(false);
@@ -209,15 +225,15 @@ export default function Floorplans({ snapshot, busy, onEdit }: EditorProps) {
         )}
         {plan && editing && (
           <div className="flex min-w-0 max-w-full flex-wrap gap-2 sm:ml-auto">
-            {rename ? (
+            {activeRename ? (
               <form
                 className="flex min-w-0 flex-wrap gap-2"
                 onSubmit={async (event) => {
                   event.preventDefault();
                   if (
                     await onEdit(
-                      { type: "put", entity: { ...plan, name: rename.value } },
-                      rename.revision,
+                      { type: "put", entity: { ...plan, name: activeRename.value } },
+                      activeRename.revision,
                     )
                   )
                     setRename(null);
@@ -227,8 +243,8 @@ export default function Floorplans({ snapshot, busy, onEdit }: EditorProps) {
                   aria-label={t("Rename floorplan")}
                   required
                   maxLength={160}
-                  value={rename.value}
-                  onChange={(event) => setRename({ ...rename, value: event.target.value })}
+                  value={activeRename.value}
+                  onChange={(event) => setRename({ ...activeRename, value: event.target.value })}
                 />
                 <Button disabled={busy}>{t("Save")}</Button>
                 <Button type="button" variant="ghost" onClick={() => setRename(null)}>
@@ -238,7 +254,13 @@ export default function Floorplans({ snapshot, busy, onEdit }: EditorProps) {
             ) : (
               <Button
                 variant="ghost"
-                onClick={() => setRename({ value: plan.name, revision: snapshot.concert.revision })}
+                onClick={() =>
+                  setRename({
+                    planId: plan.id,
+                    value: plan.name,
+                    revision: snapshot.concert.revision,
+                  })
+                }
               >
                 {t("Rename")}
               </Button>
@@ -246,7 +268,14 @@ export default function Floorplans({ snapshot, busy, onEdit }: EditorProps) {
             <DeleteButton
               label={plan.name}
               busy={busy}
-              onDelete={() => onEdit({ type: "delete", id: plan.id })}
+              onDelete={async () => {
+                const deleted = await onEdit({ type: "delete", id: plan.id });
+                if (deleted) {
+                  setChosen(null);
+                  onPlanChange?.(null);
+                }
+                return deleted;
+              }}
             />
           </div>
         )}

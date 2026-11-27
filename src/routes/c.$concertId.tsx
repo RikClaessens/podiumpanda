@@ -331,7 +331,7 @@ function ConcertEditor({ concertId }: { concertId: string }) {
           <TabsTrigger value="history">{t("History")}</TabsTrigger>
         </TabsList>
         <TabsContent value="setlist">
-          <Setlist {...props} />
+          <Setlist {...props} selectedPlayer={selectedPlayer} />
         </TabsContent>
         <TabsContent value="players">
           <Players {...props} />

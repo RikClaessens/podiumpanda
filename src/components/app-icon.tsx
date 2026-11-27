@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Theater } from "lucide-react";
 import type { apps } from "../lib/apps";
 
 type AppPath = (typeof apps)[number]["to"];
@@ -61,6 +62,7 @@ const animatedIcons: Record<AppPath, ReactNode> = {
       </g>
     </svg>
   ),
+  "/apps/stage-planner": <Theater className="h-full w-full" strokeWidth={3} aria-hidden="true" />,
 };
 
 export function AppIcon({ app }: { app: AppPath }) {

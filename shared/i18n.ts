@@ -131,6 +131,43 @@ export const dutch = {
   Tuner: "Stemapparaat",
   "Tone generator": "Toongenerator",
   Transposition: "Transponeren",
+  "Stage planner": "Podiumplanner",
+  "Concert floorplans": "Podiumplannen voor concerten",
+  "Load from concert": "Laden uit concert",
+  "Loading adds a copy to your draft without replacing existing floorplans.":
+    "Laden voegt een kopie toe aan je concept zonder bestaande podiumplannen te vervangen.",
+  "This concert has no floorplans yet.": "Dit concert heeft nog geen podiumplannen.",
+  "Floorplan to load": "Podiumplan om te laden",
+  "Load floorplan": "Podiumplan laden",
+  "Floorplan loaded from {concert}.": "Podiumplan geladen uit {concert}.",
+  "Could not load the floorplan.": "Het podiumplan kon niet worden geladen.",
+  "Save to concert": "Opslaan bij concert",
+  "Copy the selected draft floorplan and its objects to this concert.":
+    "Kopieer het geselecteerde podiumplan en de objecten naar dit concert.",
+  "Your standalone floorplans are saved on this device.":
+    "Je losse podiumplannen zijn op dit apparaat opgeslagen.",
+  "Your standalone floorplans are saved on this device as you edit.":
+    "Je losse podiumplannen worden tijdens het bewerken op dit apparaat opgeslagen.",
+  "Open a group on this device to save a floorplan to one of its concerts.":
+    "Open een groep op dit apparaat om een podiumplan bij een concert op te slaan.",
+  Group: "Groep",
+  Concert: "Concert",
+  "Choose a group": "Kies een groep",
+  "Choose a concert": "Kies een concert",
+  "This group has no concerts yet.": "Deze groep heeft nog geen concerten.",
+  "Save floorplan to concert": "Podiumplan bij concert opslaan",
+  "Floorplan saved to {concert}.": "Podiumplan opgeslagen bij {concert}.",
+  "Could not save the floorplan. {reason}": "Podiumplan opslaan is niet gelukt. {reason}",
+  "The floorplan was partly saved ({count} of {total}). {reason}":
+    "Het podiumplan is gedeeltelijk opgeslagen ({count} van {total}). {reason}",
+  "Could not load group {group}: {reason}": "Groep {group} laden is niet gelukt: {reason}",
+  "The save failed.": "Opslaan is niet gelukt.",
+  "The floorplan could not be found.": "Het podiumplan is niet gevonden.",
+  "The saved floorplan draft is unreadable.": "Het opgeslagen podiumplan is onleesbaar.",
+  "Could not read the saved floorplan draft.": "Het opgeslagen podiumplan kon niet worden gelezen.",
+  "Could not read the standalone floorplan draft.": "Het losse podiumplan kon niet worden gelezen.",
+  "Could not save the standalone floorplan draft.":
+    "Het losse podiumplan kon niet worden opgeslagen.",
   "From instrument": "Van instrument",
   "To instrument": "Naar instrument",
   "Other instrument…": "Ander instrument…",

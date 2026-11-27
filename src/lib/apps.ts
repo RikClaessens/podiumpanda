@@ -4,18 +4,23 @@ type AppDefinition = {
     | "/apps/tuner"
     | "/apps/tone-generator"
     | "/apps/transposition"
-    | "/apps/click-track";
+    | "/apps/click-track"
+    | "/apps/stage-planner";
   name: string;
 };
 
 export const apps = [
   {
+    to: "/apps/tuner",
+    name: "Tuner",
+  },
+  {
     to: "/apps/metronome",
     name: "Metronome",
   },
   {
-    to: "/apps/tuner",
-    name: "Tuner",
+    to: "/apps/click-track",
+    name: "Click Track",
   },
   {
     to: "/apps/tone-generator",
@@ -26,7 +31,7 @@ export const apps = [
     name: "Transposition",
   },
   {
-    to: "/apps/click-track",
-    name: "Click Track",
+    to: "/apps/stage-planner",
+    name: "Stage planner",
   },
 ] satisfies AppDefinition[];

@@ -212,7 +212,12 @@ export function DeleteButton({
     </Button>
   );
 }
-export function Setlist({ snapshot, busy, onEdit }: EditorProps) {
+export function Setlist({
+  snapshot,
+  busy,
+  onEdit,
+  selectedPlayer,
+}: EditorProps & { selectedPlayer: string }) {
   const { t } = useLanguage();
   const [title, setTitle] = useState("");
   const [editing, setEditing] = useState(false);
@@ -298,7 +303,10 @@ export function Setlist({ snapshot, busy, onEdit }: EditorProps) {
         )}
       </div>
       {entries.map((entry, index) => (
-        <EntryCard key={entry.id} {...{ entry, index, snapshot, busy, onEdit, editing }} />
+        <EntryCard
+          key={entry.id}
+          {...{ entry, index, snapshot, busy, onEdit, editing, selectedPlayer }}
+        />
       ))}
     </section>
   );
@@ -310,10 +318,12 @@ function EntryCard({
   busy,
   onEdit,
   editing,
+  selectedPlayer,
 }: EditorProps & {
   entry: OfKind<"entry">;
   index: number;
   editing: boolean;
+  selectedPlayer: string;
 }) {
   const { t } = useLanguage();
   const [draft, setDraft] = useState<{
@@ -476,7 +486,7 @@ function EntryCard({
       {entry.mediaUrl && <MediaPlayer key={entry.mediaUrl} id={entry.id} url={entry.mediaUrl} />}
       <div className="flex flex-wrap gap-2">
         {parts.map((part) => (
-          <PartPill key={part.id} {...{ part, snapshot, busy, onEdit, editing }} />
+          <PartPill key={part.id} {...{ part, snapshot, busy, onEdit, editing, selectedPlayer }} />
         ))}
       </div>
       {editing && (
@@ -523,9 +533,11 @@ function PartPill({
   busy,
   onEdit,
   editing,
+  selectedPlayer,
 }: EditorProps & {
   part: OfKind<"part">;
   editing: boolean;
+  selectedPlayer: string;
 }) {
   const { t } = useLanguage();
   const [draft, setDraft] = useState<{
@@ -581,7 +593,22 @@ function PartPill({
           {assignedPlayers.length > 0 && (
             <span className="min-w-0 break-words text-sm text-muted-foreground">
               {" · "}
-              {assignedPlayers.map((player) => player.name).join(", ")}
+              <strong className="font-bold">
+                {assignedPlayers.map((player, index) => (
+                  <span key={player.id}>
+                    {index > 0 && ", "}
+                    <span
+                      className={
+                        player.id === selectedPlayer
+                          ? "underline decoration-coral decoration-2 underline-offset-2"
+                          : undefined
+                      }
+                    >
+                      {player.name}
+                    </span>
+                  </span>
+                ))}
+              </strong>
             </span>
           )}
           {editing && (

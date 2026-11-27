@@ -171,9 +171,6 @@ export function Transposition() {
             <p className="mt-2 text-center text-xs text-muted-foreground sm:hidden">
               {t("Swipe to see all notes →")}
             </p>
-            <p className="mt-4 text-center text-xs text-muted-foreground">
-              {t("Sharps and flats on the same bar sound alike.")}
-            </p>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">

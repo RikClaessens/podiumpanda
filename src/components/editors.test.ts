@@ -25,15 +25,45 @@ describe("setlist part assignments", () => {
     );
 
     const markup = renderToStaticMarkup(
-      createElement(Setlist, { snapshot, busy: false, onEdit: async () => true }),
+      createElement(Setlist, {
+        snapshot,
+        busy: false,
+        onEdit: async () => true,
+        selectedPlayer: sam.id,
+      }),
     );
     const pills = markup.match(/<div class="flex max-w-full[^"]*"[^>]*>.*?<\/div>/g) ?? [];
     expect(pills).toHaveLength(2);
     expect(pills[0]).toContain("Violin 1");
     expect(pills[0]).toContain("Alex");
     expect(pills[0]).toContain("Sam");
+    expect(pills[0]).toContain(
+      '<strong class="font-bold"><span><span>Alex</span></span><span>, <span class="underline decoration-coral decoration-2 underline-offset-2">Sam</span></span></strong>',
+    );
     expect(pills[1]).toContain("Violin 2");
     expect(pills[1]).not.toContain("Alex");
     expect(pills[1]).not.toContain("Sam");
+  });
+
+  it("does not underline names when no player is selected", () => {
+    const snapshot = fixture();
+    const [player] = ofKind(snapshot, "player");
+    const [part] = ofKind(snapshot, "part");
+    snapshot.entities.push({
+      kind: "assignment",
+      id: randomUUID(),
+      partId: part.id,
+      playerId: player.id,
+    });
+    const markup = renderToStaticMarkup(
+      createElement(Setlist, {
+        snapshot,
+        busy: false,
+        onEdit: async () => true,
+        selectedPlayer: "",
+      }),
+    );
+    expect(markup).toContain(player.name);
+    expect(markup).not.toContain("decoration-coral");
   });
 });

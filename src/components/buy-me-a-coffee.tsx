@@ -26,14 +26,18 @@ const reactions = {
 
 const choices: CoffeeChoice[] = [...coffeePresets.map((preset) => preset.id), "custom"];
 
-function TreatThePanda({ iconSize }: { iconSize: number }) {
+function TreatThePanda({ iconSize, animate = false }: { iconSize: number; animate?: boolean }) {
   const { t } = useLanguage();
   return (
     <>
       <span className="sr-only">{t("Treat the panda to a coffee")}</span>
       <span aria-hidden="true">
         {t("Treat the panda to a")}{" "}
-        <Coffee size={iconSize} strokeWidth={2.4} className="inline-block align-[-0.15em]" />
+        <Coffee
+          size={iconSize}
+          strokeWidth={2.4}
+          className={`inline-block align-[-0.15em] ${animate ? "footer-coffee-cup" : ""}`}
+        />
       </span>
     </>
   );
@@ -69,7 +73,7 @@ export function BuyMeACoffee() {
           type="button"
           className="inline-flex items-center gap-1.5 rounded-sm text-xs text-muted-foreground/80 transition-colors hover:text-coral-foreground focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none"
         >
-          <TreatThePanda iconSize={14} />
+          <TreatThePanda iconSize={14} animate />
         </button>
       </PopoverTrigger>
       <PopoverContent

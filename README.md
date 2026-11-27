@@ -11,6 +11,7 @@ Create a group, add your players and organize multiple concerts in one place. Sh
 - **Setlists:** plan the music for each concert, including parts and links to recordings.
 - **Preferences and assignments:** collect players' preferences and decide who plays each part.
 - **Stage plans:** arrange chairs, stands and instruments on editable floorplans, and export them as images.
+- **Stage planner:** design and save a floorplan on this device, then copy it into a concert in a locally opened group.
 - **Concert guests:** add players for a single concert without changing the group roster.
 - **Music player:** listen to supported YouTube and Spotify links in the app, or open other links externally.
 

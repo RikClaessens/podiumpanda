@@ -2,9 +2,9 @@ import { useLanguage } from "../lib/language";
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
+  AudioLines,
   CalendarDays,
   LayoutDashboard,
-  LayoutGrid,
   ListMusic,
   Music2,
   Music3,
@@ -18,6 +18,7 @@ import { forget, recents, recentGroups, type Recent } from "../lib/local";
 import { apps } from "../lib/apps";
 import { AppCard } from "../components/app-card";
 export const Route = createFileRoute("/")({ component: Home, ssr: false });
+
 function Home() {
   return <HomeContent />;
 }
@@ -66,8 +67,8 @@ function HomeContent() {
                 <LayoutDashboard size={18} />
                 {t("Floorplans")}
               </span>
-              <span className="flex items-center gap-2 rounded-full bg-primary/10 px-3 py-2">
-                <LayoutGrid size={18} />
+              <span className="flex items-center gap-2 rounded-xl bg-coral/10 px-3 py-2 text-coral-foreground ring-1 ring-inset ring-coral/40">
+                <AudioLines size={18} />
                 {t("Musical apps")}
               </span>
             </div>
