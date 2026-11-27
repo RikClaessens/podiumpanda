@@ -70,7 +70,7 @@ describe("serverless deployment", () => {
               StringEquals: {
                 "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
                 "token.actions.githubusercontent.com:sub":
-                  "repo:RikClaessens/podiumpanda:environment:dev",
+                  "repo:RikClaessens@1387393/podiumpanda@1471985508:environment:dev",
               },
             },
           }),
@@ -153,7 +153,7 @@ describe("serverless deployment", () => {
               StringEquals: {
                 "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
                 "token.actions.githubusercontent.com:sub":
-                  "repo:RikClaessens/podiumpanda:environment:prod",
+                  "repo:RikClaessens@1387393/podiumpanda@1471985508:environment:prod",
               },
             },
           }),

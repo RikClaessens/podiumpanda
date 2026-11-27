@@ -200,7 +200,7 @@ function handler(event) {
       assumedBy: new iam.WebIdentityPrincipal(provider.openIdConnectProviderArn, {
         StringEquals: {
           "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
-          "token.actions.githubusercontent.com:sub": `repo:RikClaessens/podiumpanda:environment:${props.stage}`,
+          "token.actions.githubusercontent.com:sub": `repo:RikClaessens@1387393/podiumpanda@1471985508:environment:${props.stage}`,
         },
       }),
       maxSessionDuration: Duration.hours(1),
