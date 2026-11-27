@@ -11,22 +11,9 @@ import {
   MIN_BPM,
   subdivisionIntervalSeconds,
 } from "../lib/metronome";
+import { scheduleClick } from "../lib/click-audio";
+import { ClickSoundPicker, useClickSound } from "./click-sound-picker";
 import { Button } from "./ui/button";
-
-function scheduleClick(context: AudioContext, time: number, accented: boolean, mainBeat: boolean) {
-  const oscillator = context.createOscillator();
-  const gain = context.createGain();
-  const volume = accented ? 0.42 : mainBeat ? 0.24 : 0.1;
-  oscillator.type = "sine";
-  oscillator.frequency.setValueAtTime(accented ? 1320 : mainBeat ? 880 : 560, time);
-  gain.gain.setValueAtTime(0.0001, time);
-  gain.gain.exponentialRampToValueAtTime(volume, time + 0.003);
-  gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.055);
-  oscillator.connect(gain);
-  gain.connect(context.destination);
-  oscillator.start(time);
-  oscillator.stop(time + 0.06);
-}
 
 export function Metronome() {
   const { t } = useLanguage();
@@ -40,6 +27,11 @@ export function Metronome() {
   const [error, setError] = useState("");
   const [tapTimes, setTapTimes] = useState<number[]>([]);
   const audioContext = useRef<AudioContext | null>(null);
+  const { sound, change: changeSound, saveFailed } = useClickSound();
+  const soundRef = useRef(sound);
+  useEffect(() => {
+    soundRef.current = sound;
+  }, [sound]);
 
   useEffect(
     () => () => {
@@ -74,7 +66,14 @@ export function Metronome() {
         const beat = Math.floor(step / subdivision) % beatsPerBar;
         const isMainBeat = step % subdivision === 0;
         try {
-          scheduleClick(context, nextNoteTime, beat === 0 && isMainBeat, isMainBeat);
+          scheduleClick(
+            context,
+            nextNoteTime,
+            beat === 0 && isMainBeat,
+            isMainBeat,
+            false,
+            soundRef.current,
+          );
         } catch (audioError) {
           console.error("Could not schedule metronome audio.", audioError);
           setError(t("Could not play metronome audio."));
@@ -374,6 +373,13 @@ export function Metronome() {
             </Button>
           </div>
         </fieldset>
+
+        <ClickSoundPicker
+          className="mx-auto w-full max-w-sm"
+          sound={sound}
+          onChange={changeSound}
+          saveFailed={saveFailed}
+        />
 
         {error && (
           <p

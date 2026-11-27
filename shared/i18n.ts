@@ -143,8 +143,6 @@ export const dutch = {
   "Lower octave": "Octaaf lager",
   "Higher octave": "Octaaf hoger",
   "Octave {octave}": "Octaaf {octave}",
-  "Sharps and flats on the same bar sound alike.":
-    "Kruisen en mollen op dezelfde toets klinken hetzelfde.",
   "Swipe to see all notes →": "Veeg om alle noten te zien →",
   "From note": "Van noot",
   "To note": "Naar noot",
@@ -509,6 +507,62 @@ export const dutch = {
   "Thanks for keeping PodiumPanda free for every group and orchestra.":
     "Bedankt dat je PodiumPanda gratis houdt voor elke groep en elk orkest.",
   "Back to the music": "Terug naar de muziek",
+  "Click Track": "Click Track",
+  "Click sound": "Klikgeluid",
+  "Count-in": "Inleiding",
+  "accel.": "accel.",
+  "rit.": "rit.",
+  "Insert example": "Voorbeeld invoegen",
+  "Notation help": "Uitleg notatie",
+  "Each line is a header, a section row or a comment.":
+    "Elke regel is een kopregel, een sectieregel of commentaar.",
+  "Optional name, used for the downloaded files.":
+    "Optionele naam, gebruikt voor de gedownloade bestanden.",
+  "Bars of count-in before bar 1, from 0 to 8. It sounds slightly lower.":
+    "Inleidende maten voor maat 1, van 0 tot 8. Het klinkt iets lager.",
+  "Total number of bars, not counting the count-in.":
+    "Totaal aantal maten, zonder de inleidende maten.",
+  "Section row: from this bar on, use this time signature and tempo. The first row must be bar 1. The tempo is always in quarter notes per minute.":
+    "Sectieregel: vanaf deze maat gelden deze maatsoort en dit tempo. De eerste regel moet maat 1 zijn. Het tempo is altijd in kwartnoten per minuut.",
+  "Gradual tempo change: the tempo moves in a straight line up to the next row, or to the end of the track.":
+    "Geleidelijke tempowijziging: het tempo loopt in een rechte lijn tot de volgende regel, of tot het einde van het spoor.",
+  "Fermata: in bar 8, beat 3 is held for 2 extra seconds before the next click. The seconds are optional (2 by default). MIDI files hold at most about 16 seconds.":
+    "Fermate: in maat 8 wordt tel 3 nog 2 extra seconden aangehouden voor de volgende klik. De seconden zijn optioneel (standaard 2). MIDI-bestanden houden maximaal ongeveer 16 seconden aan.",
+  "Lines starting with # are ignored.": "Regels die met # beginnen worden genegeerd.",
+  "The click follows the bottom number of the time signature: 6/8 gives six clicks per bar, with an accent on the first. Imported scores keep their repeats, endings and jumps, so the click follows the played order. Fermatas in imported scores are not detected. Exports include the count-in.":
+    "De klik volgt het onderste getal van de maatsoort: 6/8 geeft zes klikken per maat, met een accent op de eerste. Geïmporteerde partituren behouden hun herhalingen, eindes en sprongen, zodat de klik de gespeelde volgorde volgt. Fermates in geïmporteerde partituren worden niet herkend. Exports bevatten de inleidende maten.",
+  Classic: "Klassiek",
+  "Wood block": "Woodblock",
+  "Digital beep": "Digitale piep",
+  "Soft tick": "Zachte tik",
+  Cowbell: "Koebel",
+  "Your sound choice could not be saved on this device.":
+    "Je geluidskeuze kon niet op dit apparaat worden opgeslagen.",
+  "Open a score or MIDI file": "Open een partituur of MIDI-bestand",
+  "MIDI, MuseScore (.mscz, .mscx) and MusicXML (.mxl, .musicxml). Files stay on this device.":
+    "MIDI, MuseScore (.mscz, .mscx) en MusicXML (.mxl, .musicxml). Bestanden blijven op dit apparaat.",
+  "{bars} bars · {duration}": "{bars} maten · {duration}",
+  "Stop click track": "Stop klikspoor",
+  "Play click track": "Speel klikspoor af",
+  "Start at bar": "Start bij maat",
+  Bar: "Maat",
+  "That bar is beyond the end of the track.": "Die maat ligt voorbij het einde van het spoor.",
+  "This file could not be read.": "Dit bestand kon niet worden gelezen.",
+  "This is not a MIDI file.": "Dit is geen MIDI-bestand.",
+  "No bars were found in this file.": "Er zijn geen maten gevonden in dit bestand.",
+  "No score was found in this MuseScore file.": "Geen partituur gevonden in dit MuseScore-bestand.",
+  "No music was found in this MuseScore file.": "Geen muziek gevonden in dit MuseScore-bestand.",
+  "No music was found in this MusicXML file.": "Geen muziek gevonden in dit MusicXML-bestand.",
+  "No score was found inside this MuseScore file.":
+    "Geen partituur gevonden in dit MuseScore-archief.",
+  "No score was found inside this MusicXML file.":
+    "Geen partituur gevonden in dit MusicXML-archief.",
+  "Only partwise MusicXML scores are supported.":
+    "Alleen partwise MusicXML-partituren worden ondersteund.",
+  "MIDI files with SMPTE timing are not supported.":
+    "MIDI-bestanden met SMPTE-timing worden niet ondersteund.",
+  "Unsupported file type. Use MIDI, MusicXML or MuseScore files.":
+    "Niet-ondersteund bestandstype. Gebruik MIDI-, MusicXML- of MuseScore-bestanden.",
 } satisfies Record<string, string>;
 
 const translations = new Map<string, string>(Object.entries(dutch));

@@ -342,20 +342,37 @@ label {
   opacity: 0.85;
 }
 @media (prefers-reduced-motion: no-preference) {
+  .footer-coffee-cup {
+    transform-origin: 50% 85%;
+    animation: footer-coffee-sway 5s ease-in-out infinite;
+  }
   .tuner-marker {
     transition: left 120ms ease-out;
   }
-  .app-backdrop::before {
-    content: "";
+  .listening-ring {
     position: absolute;
-    top: 8rem;
+    top: 12rem;
     left: 50%;
-    width: 15rem;
-    height: 15rem;
-    border: 1px solid color-mix(in srgb, var(--primary) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--primary) 22%, transparent);
     border-radius: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%);
     animation: tuner-breathe 4s ease-in-out infinite;
+  }
+  .listening-ring-1 {
+    width: 10rem;
+    height: 10rem;
+  }
+  .listening-ring-2 {
+    width: 17rem;
+    height: 17rem;
+    animation-delay: -1.3s;
+    animation-duration: 5s;
+  }
+  .listening-ring-3 {
+    width: 25rem;
+    height: 25rem;
+    animation-delay: -2.6s;
+    animation-duration: 6.5s;
   }
   .menu-icon span {
     transition:
@@ -470,11 +487,11 @@ label {
 @keyframes tuner-breathe {
   0%,
   100% {
-    transform: translateX(-50%) scale(0.9);
+    transform: translate(-50%, -50%) scale(0.9);
     opacity: 0.4;
   }
   50% {
-    transform: translateX(-50%) scale(1.1);
+    transform: translate(-50%, -50%) scale(1.1);
     opacity: 1;
   }
 }
@@ -529,6 +546,22 @@ label {
   50% {
     opacity: 1;
     transform: translateY(-7px) rotate(8deg);
+  }
+}
+@keyframes footer-coffee-sway {
+  0%,
+  80%,
+  100% {
+    transform: rotate(0);
+  }
+  85% {
+    transform: rotate(-5deg);
+  }
+  90% {
+    transform: rotate(4deg);
+  }
+  95% {
+    transform: rotate(-2deg);
   }
 }
 @keyframes coffee-bob {
@@ -597,6 +630,19 @@ label {
   .app-icon-down {
     animation: app-fall 2.6s ease-in-out infinite;
   }
+  .app-icon-tick {
+    animation: app-tick 2s ease-in-out infinite;
+  }
+  .app-icon-tick-2 {
+    animation-delay: 0.5s;
+  }
+  .app-icon-tick-3 {
+    animation-delay: 1s;
+  }
+  .app-icon-tick-4 {
+    animation-delay: 1.5s;
+  }
+  .app-card:hover .app-icon-tick,
   .app-card:hover .app-icon-pendulum,
   .app-card:hover .app-icon-needle,
   .app-card:hover .app-icon-wave,
@@ -684,4 +730,17 @@ label {
   .coffee-steam span {
     corner-shape: round;
   }
+}
+@keyframes app-tick {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  25%,
+  90% {
+    opacity: 0.3;
+  }
+}
+.concert-card {
+  font-family: var(--font-heading);
 }

@@ -197,7 +197,7 @@ export function Tuner() {
   const points = history.map((cents, index) => `${index * 2},${50 - cents * 0.8}`).join(" ");
 
   return (
-    <AppPage app="/apps/tuner">
+    <AppPage app="/apps/tuner" listening={status === "listening"}>
       <section className="relative">
         <div className="relative z-10 flex flex-wrap items-center justify-between gap-3">
           <Button

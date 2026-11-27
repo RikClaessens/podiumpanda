@@ -2,6 +2,7 @@ import { Grid2X2 } from "lucide-react";
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useLanguage } from "../lib/language";
+import { AppIcon } from "./app-icon";
 import { apps } from "../lib/apps";
 import { recentGroups, type RecentGroup } from "../lib/local";
 import { Button } from "./ui/button";
@@ -78,7 +79,6 @@ export function AppSwitcher() {
         <h2 className="text-lg font-semibold">{t("Apps")}</h2>
         <div className="space-y-2">
           {apps.map((app) => {
-            const Icon = app.icon;
             return (
               <Link
                 key={app.to}
@@ -86,7 +86,9 @@ export function AppSwitcher() {
                 onClick={() => setOpen(false)}
                 className={switcherLinkClass}
               >
-                <Icon size={20} className={`shrink-0 ${app.iconColor}`} aria-hidden="true" />
+                <span className="block size-6 shrink-0 text-primary" aria-hidden="true">
+                  <AppIcon app={app.to} />
+                </span>
                 <span className="min-w-0 break-words">{t(app.name)}</span>
               </Link>
             );
