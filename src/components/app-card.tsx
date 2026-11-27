@@ -1,17 +1,10 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowUpRight } from "lucide-react";
 import { useLanguage } from "../lib/language";
 import type { apps } from "../lib/apps";
 
 type AppDefinition = (typeof apps)[number];
 
-export function AppCard({
-  app,
-  variant = "default",
-}: {
-  app: AppDefinition;
-  variant?: "default" | "homepage";
-}) {
+export function AppCard({ app }: { app: AppDefinition }) {
   const { t } = useLanguage();
   const Icon = app.icon;
   return (
@@ -27,19 +20,8 @@ export function AppCard({
         aria-hidden="true"
       />
       <span className="min-w-0 flex-1">
-        <span
-          className={`block font-semibold leading-tight ${variant === "homepage" ? "text-xl" : ""}`}
-        >
-          {t(app.name)}
-        </span>
+        <span className="block text-xl font-semibold leading-tight">{t(app.name)}</span>
       </span>
-      {variant !== "homepage" && (
-        <ArrowUpRight
-          size={18}
-          className="shrink-0 text-coral-foreground transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-          aria-hidden="true"
-        />
-      )}
     </Link>
   );
 }

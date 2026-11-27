@@ -38,6 +38,8 @@ export const dutch = {
   "Your orchestra or ensemble": "Je orkest of ensemble",
   "Create group": "Groep aanmaken",
   "Your groups": "Jouw groepen",
+  "All groups": "Alle groepen",
+  "Groups opened on this device.": "Groepen die je op dit apparaat hebt geopend.",
   "← Back to home": "← Terug naar de startpagina",
   "Create a group, or open a group link you received.":
     "Maak een groep aan of open een ontvangen groepslink.",
@@ -126,6 +128,46 @@ export const dutch = {
   "App switcher": "Appkiezer",
   Apps: "Apps",
   Metronome: "Metronoom",
+  Tuner: "Stemapparaat",
+  "Written note": "Geschreven noot",
+  "Pitch perfect!": "Zuiver als een panda!",
+  "A little flat": "Een beetje te laag",
+  "A little sharp": "Een beetje te hoog",
+  "Listening for your note…": "Luisteren naar je noot…",
+  "Ready when you are": "Klaar wanneer jij dat bent",
+  cents: "cent",
+  Flat: "Te laag",
+  Sharp: "Te hoog",
+  "Your pitch over time": "Je toonhoogte in de tijd",
+  "Your instrument": "Je instrument",
+  "Concert pitch (C)": "Concertstemming (C)",
+  "B♭ trumpet / clarinet": "Bes-trompet / klarinet",
+  "E♭ alto saxophone": "Es-altsaxofoon",
+  "B♭ tenor saxophone / bass clarinet": "Bes-tenorsaxofoon / basklarinet",
+  "E♭ baritone saxophone": "Es-baritonsaxofoon",
+  "F horn / English horn": "F-hoorn / althobo",
+  "E♭ clarinet": "Es-klarinet",
+  "Notes match your written part. Sounding frequency stays the same.":
+    "De noten komen overeen met je partij. De klinkende frequentie blijft hetzelfde.",
+  "Your tuner settings could not be saved on this device.":
+    "Je stemapparaatinstellingen konden niet op dit apparaat worden opgeslagen.",
+  "Reference pitch": "Stemtoon",
+  "Lower reference pitch": "Stemtoon verlagen",
+  "Raise reference pitch": "Stemtoon verhogen",
+  "Waiting for microphone…": "Wachten op de microfoon…",
+  "Stop listening": "Stop met luisteren",
+  "Let the panda listen": "Laat de panda luisteren",
+  "The panda needs your microphone to check if you're pitch perfect. Play one sustained note and let those panda ears work!":
+    "De panda heeft je microfoon nodig om te horen of je zuiver speelt. Speel één lange noot en laat die pandaoren hun werk doen!",
+  "Your audio stays on this device.": "Je geluid blijft op dit apparaat.",
+  "Microphone access is unavailable. Use a supported browser on HTTPS or localhost.":
+    "Microfoontoegang is niet beschikbaar. Gebruik een ondersteunde browser via HTTPS of localhost.",
+  "The microphone stopped. Please start listening again.":
+    "De microfoon is gestopt. Laat de panda opnieuw luisteren.",
+  "Microphone access was blocked. Allow it in your browser settings, then try again.":
+    "Microfoontoegang is geblokkeerd. Geef toestemming in je browserinstellingen en probeer opnieuw.",
+  "The panda couldn't hear your microphone. Check your device and try again.":
+    "De panda kon je microfoon niet horen. Controleer je apparaat en probeer opnieuw.",
   Tempo: "Tempo",
   "Beats per bar": "Tellen per maat",
   "Decrease beats per bar": "Minder tellen per maat",
@@ -353,6 +395,8 @@ export const dutch = {
     "Automatisch kopiëren is niet gelukt. Je gedeelde link: {link}",
   "Saved concert shortcuts are unreadable. Browser storage can be cleared to reset them.":
     "De opgeslagen concertsnelkoppelingen zijn onleesbaar. Wis de browseropslag om ze opnieuw in te stellen.",
+  "Saved group shortcuts are unreadable. Browser storage can be cleared to reset them.":
+    "De opgeslagen groepssnelkoppelingen zijn onleesbaar. Wis de browseropslag om ze opnieuw in te stellen.",
   "The concert has not loaded yet.": "Het concert is nog niet geladen.",
   "The request failed.": "Het verzoek is mislukt.",
   "Invalid input.": "Ongeldige invoer.",

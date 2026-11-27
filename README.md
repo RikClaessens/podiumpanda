@@ -14,6 +14,8 @@ Dropdowns, checkboxes, tables, and date pickers use shadcn primitives. Dates are
 
 The header's settings menu contains language and theme controls. Concert tabs stay in one horizontally scrollable row on narrow screens, with keyboard navigation and a swipe hint. The selected concert tab is kept in the URL, so refresh and browser back/forward restore it; sharing keys remain in the URL fragment.
 
+The chromatic tuner listens locally with microphone permission and displays pitch, cents, and a short pitch history. A4 defaults to 440 Hz and can be adjusted from 400 to 480 Hz. The instrument selector shows written notes for transposing instruments; both settings are remembered in browser storage. Stop listening or leave the page to release the microphone. Microphone access requires HTTPS or localhost and a supported browser.
+
 The homepage links to a dedicated group-creation page. Creating a group opens its workspace and saves a shortcut in the browser when storage is available.
 
 Each group has a shared, changeable icon chosen from music and percussion options. Older groups and shortcuts use the people icon by default. Homepage shortcuts show the icon last seen in that browser and update when the group is opened.

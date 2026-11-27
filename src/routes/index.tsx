@@ -1,9 +1,9 @@
 import { useLanguage } from "../lib/language";
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CalendarDays, LayoutDashboard, ListMusic, Music2, Plus, Users, X } from "lucide-react";
+import { CalendarDays, LayoutDashboard, ListMusic, Music2, Users, X } from "lucide-react";
 import { Button } from "../components/ui/button";
-import { GroupIcon } from "../components/group-icon";
+import { GroupCards } from "../components/group-cards";
 import { forget, recents, recentGroups, type Recent } from "../lib/local";
 import { apps } from "../lib/apps";
 import { AppCard } from "../components/app-card";
@@ -83,33 +83,13 @@ function HomeContent() {
               {t("Create a group, or open a group link you received.")}
             </p>
           )}
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {groups.map((item) => (
-              <Link
-                key={item.id}
-                to="/g/$groupId"
-                params={{ groupId: item.id }}
-                hash={`key=${item.key}`}
-                className="concert-card panel flex min-h-20 min-w-0 items-center gap-4"
-              >
-                <GroupIcon icon={item.icon} className="shrink-0 text-coral-foreground" />
-                <h3 className="min-w-0 text-2xl font-semibold break-words">{item.title}</h3>
-              </Link>
-            ))}
-            <Link
-              to="/g/new"
-              className="concert-card flex min-h-20 min-w-0 items-center gap-4 rounded-[1.25rem] border-2 border-dashed border-primary/40 bg-secondary/40 p-5 text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-            >
-              <Plus size={24} className="shrink-0" aria-hidden="true" />
-              <h3 className="text-2xl font-semibold">{t("Create group")}</h3>
-            </Link>
-          </div>
+          <GroupCards groups={groups} />
         </div>
         <aside className="space-y-4">
           <h2 className="section-title">{t("Apps")}</h2>
           <div className="space-y-3">
             {apps.map((app) => {
-              return <AppCard key={app.to} app={app} variant="homepage" />;
+              return <AppCard key={app.to} app={app} />;
             })}
           </div>
         </aside>

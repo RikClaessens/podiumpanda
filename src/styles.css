@@ -163,6 +163,24 @@ label {
   background: var(--color-coral);
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-coral) 18%, transparent);
 }
+.tuner-panel {
+  background:
+    radial-gradient(
+      circle at 50% 20%,
+      color-mix(in srgb, var(--color-lilac) 35%, transparent),
+      transparent 40%
+    ),
+    linear-gradient(145deg, var(--card), var(--secondary));
+}
+.tuner-note {
+  font-size: clamp(6rem, 22vw, 9rem);
+}
+.tuner-meter {
+  background: linear-gradient(90deg, #ff9a94, #f7c94b 32%, #82c9a0 50%, #f7c94b 68%, #ff9a94);
+}
+.tuner-marker {
+  transform: translate(-50%, -50%);
+}
 ::selection {
   background: #c9a6ff;
   color: #301348;
@@ -287,6 +305,21 @@ label {
   opacity: 0.85;
 }
 @media (prefers-reduced-motion: no-preference) {
+  .tuner-marker {
+    transition: left 120ms ease-out;
+  }
+  .tuner-panel::before {
+    content: "";
+    position: absolute;
+    top: 5rem;
+    left: 50%;
+    width: 15rem;
+    height: 15rem;
+    border: 1px solid color-mix(in srgb, var(--primary) 12%, transparent);
+    border-radius: 50%;
+    transform: translateX(-50%);
+    animation: tuner-breathe 4s ease-in-out infinite;
+  }
   .menu-icon span {
     transition:
       transform 200ms ease,
@@ -372,6 +405,17 @@ label {
   }
 }
 
+@keyframes tuner-breathe {
+  0%,
+  100% {
+    transform: translateX(-50%) scale(0.9);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateX(-50%) scale(1.1);
+    opacity: 1;
+  }
+}
 @keyframes harmony-enter {
   from {
     opacity: 0;

@@ -9,6 +9,8 @@ export function Picker({
   ariaLabel,
   disabled,
   className,
+  contentPosition,
+  contentClassName,
 }: {
   value: string;
   onValueChange: (value: string) => void;
@@ -17,6 +19,8 @@ export function Picker({
   ariaLabel?: string;
   disabled?: boolean;
   className?: string;
+  contentPosition?: "item-aligned" | "popper";
+  contentClassName?: string;
 }) {
   return (
     <Select
@@ -27,7 +31,7 @@ export function Picker({
       <SelectTrigger id={id} aria-label={ariaLabel} className={className}>
         <SelectValue />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent position={contentPosition} className={contentClassName}>
         {options.map((option) => (
           <SelectItem key={option.value || emptyValue} value={option.value || emptyValue}>
             {option.label}
