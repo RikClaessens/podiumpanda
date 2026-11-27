@@ -46,6 +46,7 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: pnpm build
       - name: Configure deployment credentials
         uses: aws-actions/configure-aws-credentials@v6
         with:
@@ -86,4 +87,4 @@ jobs:
       - name: Deploy
         env:
           STAGE: ${{ inputs.stage || 'dev' }}
-        run: pnpm run deploy --context "stage=$STAGE"
+        run: pnpm cdk deploy --all --require-approval never --context "stage=$STAGE"
